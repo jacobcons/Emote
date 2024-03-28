@@ -1,6 +1,5 @@
-import knex from 'knex';
-
-import {TABLES} from "../../constants/tables.constants.js";
+import { TABLES } from '../../constants/tables.constants.js';
+import { dropTableFully } from '../services.js';
 
 function up(knex) {
   return knex.schema.createTable(TABLES.USER, (table) => {
@@ -15,7 +14,7 @@ function up(knex) {
 }
 
 function down(knex) {
-  return knex.raw(`DROP TABLE IF EXISTS "${TABLES.USER}" CASCADE`);
+  return dropTableFully(knex, TABLES.USER);
 }
 
 export { up, down };

@@ -1,9 +1,10 @@
-import {hashPassword} from "../../utils/auth.utils.js";
-import {TABLES} from "../../constants/tables.constants.js";
+import { hashPassword } from '../../utils/auth.utils.js';
+import { TABLES } from '../../constants/tables.constants.js';
+import { truncateTableFully } from '../services.js';
 
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex.raw(`TRUNCATE TABLE "${TABLES.USER}" RESTART IDENTITY CASCADE`);
+  await truncateTableFully(knex, TABLES.USER);
   await knex(TABLES.USER).insert([
     {
       name: 'joey',

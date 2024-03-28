@@ -1,5 +1,9 @@
 const TABLES = {
-    USER: 'user',
-    JOB: 'job',
+  USER: 'user',
+  FRIENDSHIP: 'friendship',
+  FRIEND_REQUEST: 'friend_request',
+  POST: 'post',
+  COMMENT: 'comment',
+  REACTION: 'reaction',
 };
-export {TABLES};
+export { TABLES };

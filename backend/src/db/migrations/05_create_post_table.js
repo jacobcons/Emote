@@ -1,5 +1,3 @@
-import knex from 'knex';
-
 import { TABLES } from '../../constants/tables.constants.js';
 import {
   addCreatedAtColumnToTable,
@@ -18,8 +16,8 @@ function up(knex) {
         .notNullable()
         .references('id')
         .inTable(TABLES.USER);
-      addCreatedAtColumnToTable(knex, table);
-      addUpdatedAtColumnToTable(knex, table);
+      addCreatedAtColumnToTable(knex, knex);
+      addUpdatedAtColumnToTable(knex, knex);
       table.string('text').notNullable();
       table.string('image');
     })
@@ -35,7 +33,7 @@ function up(knex) {
 
 function down(knex) {
   return dropTableFully(knex, TABLES.POST).then(() =>
-    dropTriggerThatUpdatesUpdatedAt(TABLES.POST),
+    dropTriggerThatUpdatesUpdatedAt(knex, TABLES.POST),
   );
 }
 

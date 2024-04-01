@@ -1,5 +1,3 @@
-import knex from 'knex';
-
 import { TABLES } from '../../constants/tables.constants.js';
 import {
   addCreatedAtColumnToTable,

@@ -1,5 +1,3 @@
-import knex from 'knex';
-
 import { TABLES } from '../../constants/tables.constants.js';
 import {
   addCreatedAtColumnToTable,
@@ -23,16 +21,16 @@ function up(knex) {
         .notNullable()
         .references('id')
         .inTable(TABLES.POST);
-      addCreatedAtColumnToTable(knex, table);
-      addUpdatedAtColumnToTable(knex, table);
+      addCreatedAtColumnToTable(knex, knex);
+      addUpdatedAtColumnToTable(knex, knex);
       table.string('text').notNullable();
     })
-    .then(() => createTriggerThatUpdatesUpdatedAt(TABLES.COMMENT));
+    .then(() => createTriggerThatUpdatesUpdatedAt(knex, TABLES.COMMENT));
 }
 
 function down(knex) {
   return dropTableFully(knex, TABLES.COMMENT).then(() =>
-    dropTriggerThatUpdatesUpdatedAt(TABLES.COMMENT),
+    dropTriggerThatUpdatesUpdatedAt(knex, TABLES.COMMENT),
   );
 }
 

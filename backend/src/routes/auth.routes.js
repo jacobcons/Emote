@@ -5,9 +5,9 @@ import { validateBody } from '../middlewares/validation.middlewares.js';
 
 const router = express.Router();
 
-router.post('/register', validateBody(registerSchema), register);
+router.route('/register').post(validateBody(registerSchema), register);
 
-router.post('/login', validateBody(loginSchema), login);
+router.route('/login').post(validateBody(loginSchema), login);
 
-router.post('/logout', logout);
+router.route('/logout').post(logout);
 export default router;

@@ -16,8 +16,8 @@ function up(knex) {
         .notNullable()
         .references('id')
         .inTable(TABLES.USER);
-      addCreatedAtColumnToTable(knex, knex);
-      addUpdatedAtColumnToTable(knex, knex);
+      addCreatedAtColumnToTable(knex, table);
+      addUpdatedAtColumnToTable(knex, table);
       table.string('text').notNullable();
       table.string('image');
     })

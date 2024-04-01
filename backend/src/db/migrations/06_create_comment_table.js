@@ -21,8 +21,8 @@ function up(knex) {
         .notNullable()
         .references('id')
         .inTable(TABLES.POST);
-      addCreatedAtColumnToTable(knex, knex);
-      addUpdatedAtColumnToTable(knex, knex);
+      addCreatedAtColumnToTable(knex, table);
+      addUpdatedAtColumnToTable(knex, table);
       table.string('text').notNullable();
     })
     .then(() => createTriggerThatUpdatesUpdatedAt(knex, TABLES.COMMENT));

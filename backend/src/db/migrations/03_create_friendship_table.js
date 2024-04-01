@@ -7,16 +7,16 @@ function up(knex) {
   return knex.schema.createTable(TABLES.FRIENDSHIP, (table) => {
     table.increments('id');
     table
-      .integer('user_1_id')
+      .integer('user_id')
       .notNullable()
       .references('id')
       .inTable(TABLES.USER);
     table
-      .integer('user_2_id')
+      .integer('friend_id')
       .notNullable()
       .references('id')
       .inTable(TABLES.USER);
-    table.unique(['user_1_id', 'user_2_id']);
+    table.unique(['user_id', 'friend_id']);
   });
 }
 

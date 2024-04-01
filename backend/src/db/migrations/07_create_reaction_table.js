@@ -23,6 +23,7 @@ function up(knex) {
     table
       .enum('type', ['like', 'love', 'laugh', 'shock', 'sad', 'angry'])
       .notNullable();
+    table.unique(['user_id', 'post_id', 'type']);
   });
 }
 

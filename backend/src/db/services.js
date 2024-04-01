@@ -22,4 +22,4 @@ export const dropTriggerThatUpdatesUpdatedAt = (knex, tableName) =>
 export const addCreatedAtColumnToTable = (knex, table) =>
   table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 export const addUpdatedAtColumnToTable = (knex, table) =>
-  table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+  table.timestamp('updated_at');

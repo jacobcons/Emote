@@ -14,12 +14,14 @@ function up(knex) {
       .integer('user_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER);
+      .inTable(TABLES.USER)
+      .onDelete('CASCADE');
     table
       .integer('post_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.POST);
+      .inTable(TABLES.POST)
+      .onDelete('CASCADE');
     table
       .enum('type', ['like', 'love', 'laugh', 'shock', 'sad', 'angry'])
       .notNullable();

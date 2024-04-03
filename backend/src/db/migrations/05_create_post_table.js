@@ -15,7 +15,8 @@ function up(knex) {
         .integer('user_id')
         .notNullable()
         .references('id')
-        .inTable(TABLES.USER);
+        .inTable(TABLES.USER)
+        .onDelete('CASCADE');
       addCreatedAtColumnToTable(knex, table);
       addUpdatedAtColumnToTable(knex, table);
       table.string('text').notNullable();

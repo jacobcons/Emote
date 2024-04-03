@@ -8,12 +8,14 @@ function up(knex) {
       .integer('sender_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER);
+      .inTable(TABLES.USER)
+      .onDelete('CASCADE');
     table
       .integer('receiver_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER);
+      .inTable(TABLES.USER)
+      .onDelete('CASCADE');
     table.unique(['sender_id', 'receiver_id']);
   });
 }

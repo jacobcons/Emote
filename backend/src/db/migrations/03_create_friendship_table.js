@@ -10,12 +10,14 @@ function up(knex) {
       .integer('user_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER);
+      .inTable(TABLES.USER)
+      .onDelete('CASCADE');
     table
       .integer('friend_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER);
+      .inTable(TABLES.USER)
+      .onDelete('CASCADE');
     table.unique(['user_id', 'friend_id']);
   });
 }

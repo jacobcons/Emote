@@ -1,6 +1,6 @@
 import { knex } from '../db/connection.js';
 import { createError } from '../utils/errors.utils.js';
-import { TABLES } from '../constants/tables.constants.js';
+import { FRIENDSHIP_STATUS, TABLES } from '../constants.js';
 import { paginate } from '../utils/dbQueries.utils.js';
 
 export const getUsers = async (req, res) => {
@@ -34,7 +34,20 @@ export const getUsers = async (req, res) => {
   if (q) {
     query = query.whereILike('name', `%${q}%`);
   }
-  const users = (await paginate(query, page)).map((user) => { ...user, friendStatus:  });
+  const users = (await paginate(query, page)).map((user) => {
+    const { id } = user;
+    let friendshipStatus;
+    if (sentFriendRequestIds.has(id)) {
+      friendshipStatus = FRIENDSHIP_STATUS.REQUEST_SENT;
+    } else if (receivedFriendRequestIds.has(id)) {
+      friendshipStatus = FRIENDSHIP_STATUS.REQUEST_RECEIVED;
+    } else if (friendIds.has(id)) {
+      friendshipStatus = FRIENDSHIP_STATUS.FRIENDS;
+    } else {
+      friendshipStatus = FRIENDSHIP_STATUS.NO_REQUEST;
+    }
+    return { ...user, friendshipStatus };
+  });
 
   res.json(users);
 };

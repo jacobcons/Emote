@@ -1,4 +1,4 @@
-import { TABLES } from '../../constants/tables.constants.js';
+import { TABLES } from '../../constants.js';
 import {
   addCreatedAtColumnToTable,
   addUpdatedAtColumnToTable,

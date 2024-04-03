@@ -1,4 +1,4 @@
-import { TABLES } from '../constants/tables.constants.js';
+import { TABLES } from '../constants.js';
 
 export const dropTableFully = (knex, tableName) =>
   knex.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE;`);

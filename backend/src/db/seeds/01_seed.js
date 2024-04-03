@@ -1,5 +1,5 @@
 import { hashPassword } from '../../utils/auth.utils.js';
-import { TABLES } from '../../constants/tables.constants.js';
+import { TABLES } from '../../constants.js';
 import { truncateTableFully } from '../utils.js';
 
 export async function seed(knex) {

@@ -1,6 +1,6 @@
 import { hashPassword } from '../../utils/auth.utils.js';
 import { TABLES } from '../../constants/tables.constants.js';
-import { truncateTableFully } from '../services.js';
+import { truncateTableFully } from '../utils.js';
 
 export async function seed(knex) {
   // Deletes ALL existing entries
@@ -37,6 +37,21 @@ export async function seed(knex) {
       email: 'cat@gmail.com',
       password: await hashPassword('1'),
     },
+    {
+      name: 'bat',
+      email: 'bat@gmail.com',
+      password: await hashPassword('1'),
+    },
+    {
+      name: 'mat',
+      email: 'mat@gmail.com',
+      password: await hashPassword('1'),
+    },
+    {
+      name: 'lat',
+      email: 'lat@gmail.com',
+      password: await hashPassword('1'),
+    },
   ]);
 
   // seed friendship table
@@ -63,6 +78,18 @@ export async function seed(knex) {
   await knex(TABLES.FRIEND_REQUEST).insert([
     {
       senderId: 1,
+      receiverId: 4,
+    },
+    {
+      senderId: 1,
+      receiverId: 6,
+    },
+    {
+      senderId: 5,
+      receiverId: 1,
+    },
+    {
+      senderId: 5,
       receiverId: 4,
     },
     {

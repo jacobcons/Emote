@@ -1,5 +1,5 @@
 import { TABLES } from '../../constants/tables.constants.js';
-import { dropTableFully } from '../services.js';
+import { dropTableFully } from '../utils.js';
 
 function up(knex) {
   return knex.schema.createTable(TABLES.FRIEND_REQUEST, (table) => {

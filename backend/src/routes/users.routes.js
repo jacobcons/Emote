@@ -5,11 +5,14 @@ import {
   getUser,
   updateUser,
 } from '../controllers/users.controllers.js';
-import { validateQuery } from '../middlewares/validation.middlewares.js';
+import {
+  validateIds,
+  validateQuery,
+} from '../middlewares/validation.middlewares.js';
 
 const router = express.Router();
 
 router.route('/').get(validateQuery(getUsersSchema), getUsers);
 
-router.route('/:id').get(getUser).patch(updateUser);
+router.route('/:id').all(validateIds('id')).get(getUser).patch(updateUser);
 export default router;

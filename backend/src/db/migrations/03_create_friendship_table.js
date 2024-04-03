@@ -1,7 +1,7 @@
 import knex from 'knex';
 
 import { TABLES } from '../../constants/tables.constants.js';
-import { dropTableFully } from '../services.js';
+import { dropTableFully } from '../utils.js';
 
 function up(knex) {
   return knex.schema.createTable(TABLES.FRIENDSHIP, (table) => {

@@ -5,7 +5,7 @@ import {
   createTriggerThatUpdatesUpdatedAt,
   dropTableFully,
   dropTriggerThatUpdatesUpdatedAt,
-} from '../services.js';
+} from '../utils.js';
 
 function up(knex) {
   return knex.schema.createTable(TABLES.REACTION, (table) => {

@@ -1,14 +1,12 @@
-const createError = (statusCode, message) => {
+export function createError(statusCode, message) {
   return {
     statusCode,
-    message
+    message,
   };
-};
+}
 
-const checkResourceExists = (resource, id) => {
+export function checkResourceExists(resource, id) {
   if (!resource) {
     throw createError(404, `Resource with id <${id}> not found`);
   }
-};
-
-export { createError, checkResourceExists };
+}

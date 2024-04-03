@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/errors.utils.js';
 
-const verifyToken = (req, res, next) => {
+export function verifyToken(req, res, next) {
   const { token } = req.cookies;
   if (!token) {
     return next(createError(401, 'No token provided'));
@@ -14,5 +14,4 @@ const verifyToken = (req, res, next) => {
   } catch (err) {
     return next(createError(401, 'Invalid token'));
   }
-};
-export { verifyToken };
+}

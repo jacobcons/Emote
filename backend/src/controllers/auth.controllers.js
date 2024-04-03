@@ -7,7 +7,7 @@ import {
 } from '../utils/auth.utils.js';
 import { TABLES } from '../constants.js';
 
-export const register = async (req, res, next) => {
+export async function register(req, res, next) {
   const { name, email, password } = req.body;
 
   try {
@@ -30,9 +30,9 @@ export const register = async (req, res, next) => {
     }
     return next(err);
   }
-};
+}
 
-export const login = async (req, res, next) => {
+export async function login(req, res, next) {
   const { email, password } = req.body;
 
   const user = await knex(TABLES.USER).first('id', 'password').where({ email });
@@ -48,9 +48,9 @@ export const login = async (req, res, next) => {
 
   attachTokenCookieToResponse(user.id, res);
   res.json({ message: 'Login successful' });
-};
+}
 
-export const logout = async (req, res) => {
+export function logout(req, res) {
   res.clearCookie('token');
   res.json({ message: 'Logout successful' });
-};
+}

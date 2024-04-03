@@ -3,7 +3,7 @@ import { createError } from '../utils/errors.utils.js';
 import { FRIENDSHIP_STATUS, TABLES } from '../constants.js';
 import { paginate } from '../utils/dbQueries.utils.js';
 
-export const getUsers = async (req, res) => {
+export async function getUsers(req, res) {
   const { q, page } = req.query;
   const idOfLoggedInUser = req.user.id;
 
@@ -50,12 +50,12 @@ export const getUsers = async (req, res) => {
   });
 
   res.json(users);
-};
+}
 
-export const getUser = (req, res) => {
+export async function getUser(req, res) {
   res.json({});
-};
+}
 
-export const updateUser = (req, res) => {
+export async function updateUser(req, res) {
   res.json({});
-};
+}

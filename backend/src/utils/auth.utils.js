@@ -2,15 +2,14 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import ms from 'ms';
 
-export const hashPassword = async (password) => {
+export async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
-};
-export const createToken = (id) => {
+}
+export function createToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
-};
-
+}
 export function attachTokenCookieToResponse(id, res) {
   const token = createToken(id);
   res.cookie('token', token, {

@@ -10,4 +10,5 @@ router.route('/register').post(validateBody(registerSchema), register);
 router.route('/login').post(validateBody(loginSchema), login);
 
 router.route('/logout').post(logout);
+
 export default router;

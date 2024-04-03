@@ -15,10 +15,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
-app.use('/users', [verifyToken, usersRouter]);
+app.use('/users', verifyToken, usersRouter);
 
-app.use(notFound);
-app.use(celebrateErrorHandler());
-app.use(errorHandler);
+app.use(notFound, celebrateErrorHandler(), errorHandler);
 
 export { app };

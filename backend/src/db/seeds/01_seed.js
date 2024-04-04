@@ -57,20 +57,20 @@ export async function seed(knex) {
   // seed friendship table
   await knex(TABLES.FRIENDSHIP).insert([
     {
-      userId: 1,
-      friendId: 2,
+      user1Id: 1,
+      user2Id: 2,
     },
     {
-      userId: 1,
-      friendId: 3,
+      user1Id: 1,
+      user2Id: 3,
     },
     {
-      userId: 2,
-      friendId: 3,
+      user1Id: 2,
+      user2Id: 3,
     },
     {
-      userId: 2,
-      friendId: 4,
+      user1Id: 2,
+      user2Id: 4,
     },
   ]);
 

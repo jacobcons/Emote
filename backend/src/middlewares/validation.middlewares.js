@@ -15,7 +15,7 @@ export function validateParams(schema) {
   return validate({ [Segments.PARAMS]: schema });
 }
 
-export function validateId(...ids) {
+export function validateIds(...ids) {
   let idSchema = {};
   for (const id of ids) {
     idSchema[id] = Joi.number().integer().positive();

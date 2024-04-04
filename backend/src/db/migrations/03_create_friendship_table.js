@@ -7,18 +7,18 @@ function up(knex) {
   return knex.schema.createTable(TABLES.FRIENDSHIP, (table) => {
     table.increments('id');
     table
-      .integer('user_id')
+      .integer('user1_id')
       .notNullable()
       .references('id')
       .inTable(TABLES.USER)
       .onDelete('CASCADE');
     table
-      .integer('friend_id')
+      .integer('user2_id')
       .notNullable()
       .references('id')
       .inTable(TABLES.USER)
       .onDelete('CASCADE');
-    table.unique(['user_id', 'friend_id']);
+    table.unique(['user1_id', 'user2_id']);
   });
 }
 

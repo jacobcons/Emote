@@ -1,7 +1,7 @@
 import { knex } from '../db/connection.js';
 import { checkResourceExists, createError } from '../utils/errors.utils.js';
 import { FRIENDSHIP_STATUS, TABLES } from '../constants.js';
-import { paginate } from '../utils/dbQueries.utils.js';
+import { getFriendIds, paginate } from '../utils/dbQueries.utils.js';
 
 /*
   Map user ids to the correct friendship status with the logged-in user
@@ -20,14 +20,8 @@ async function getFriendshipStatuses(currentUserId) {
       : friendshipStatuses.set(senderId, FRIENDSHIP_STATUS.REQUEST_RECEIVED);
   }
 
-  const friendships = await knex(TABLES.FRIENDSHIP)
-    .select('user1Id', 'user2Id')
-    .where('user1Id', currentUserId)
-    .orWhere('user2Id', currentUserId);
-  for (const friendship of friendships) {
-    const { user1Id, user2Id } = friendship;
-    const otherUserId = user1Id === currentUserId ? user2Id : user1Id;
-    friendshipStatuses.set(otherUserId, FRIENDSHIP_STATUS.FRIENDS);
+  for (const friendId of await getFriendIds(currentUserId)) {
+    friendshipStatuses.set(friendId, FRIENDSHIP_STATUS.FRIENDS);
   }
   return friendshipStatuses;
 }

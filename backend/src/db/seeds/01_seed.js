@@ -52,6 +52,11 @@ export async function seed(knex) {
       email: 'lat@gmail.com',
       password: await hashPassword('1'),
     },
+    {
+      name: 'kat',
+      email: 'kat@gmail.com',
+      password: await hashPassword('1'),
+    },
   ]);
 
   // seed friendship table
@@ -71,6 +76,10 @@ export async function seed(knex) {
     {
       user1Id: 2,
       user2Id: 4,
+    },
+    {
+      user1Id: 7,
+      user2Id: 1,
     },
   ]);
 

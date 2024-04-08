@@ -23,7 +23,10 @@ app.post(
   '/upload-image',
   fileUpload({
     useTempFiles: true,
-    limits: { fileSize: MAX_UPLOAD_SIZE_BYTES },
+    limits: {
+      fileSize: MAX_UPLOAD_SIZE_BYTES,
+      files: 1,
+    },
   }),
   uploadImage,
 );

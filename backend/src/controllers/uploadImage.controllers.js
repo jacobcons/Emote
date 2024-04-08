@@ -9,20 +9,23 @@ cloudinary.config({
 });
 
 export const uploadImage = async (req, res) => {
-  const { image } = req.files;
-  const { tempFilePath } = image;
-
-  if (!image) {
-    await remove(tempFilePath);
-    throw createError(400, 'No image field provided');
+  let file;
+  let tempFilePath;
+  if (req.files) {
+    file = Object.values(req.files)[0];
+    tempFilePath = file.tempFilePath;
   }
 
-  if (!image.mimetype.startsWith('image')) {
-    await remove(tempFilePath);
-    throw createError(400, 'Upload must be an image ');
+  if (!file) {
+    throw createError(400, 'No file provided');
   }
 
-  if (image.truncated) {
+  if (!file.mimetype.startsWith('image')) {
+    await remove(tempFilePath);
+    throw createError(400, 'Upload must be an image');
+  }
+
+  if (file.truncated) {
     await remove(tempFilePath);
     throw createError(400, `Upload cannot exceed ${MAX_UPLOAD_SIZE_MB}MB`);
   }

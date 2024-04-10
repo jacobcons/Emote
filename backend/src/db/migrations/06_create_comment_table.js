@@ -9,30 +9,30 @@ import {
 
 function up(knex) {
   return knex.schema
-    .createTable(TABLES.COMMENT, (table) => {
+    .createTable('comment', (table) => {
       table.increments('id');
       table
         .integer('user_id')
         .notNullable()
         .references('id')
-        .inTable(TABLES.USER)
+        .inTable('user')
         .onDelete('CASCADE');
       table
         .integer('post_id')
         .notNullable()
         .references('id')
-        .inTable(TABLES.POST)
+        .inTable('post')
         .onDelete('CASCADE');
       addCreatedAtColumnToTable(knex, table);
       addUpdatedAtColumnToTable(knex, table);
       table.string('text').notNullable();
     })
-    .then(() => createTriggerThatUpdatesUpdatedAt(knex, TABLES.COMMENT));
+    .then(() => createTriggerThatUpdatesUpdatedAt(knex, 'comment'));
 }
 
 function down(knex) {
-  return dropTableFully(knex, TABLES.COMMENT).then(() =>
-    dropTriggerThatUpdatesUpdatedAt(knex, TABLES.COMMENT),
+  return dropTableFully(knex, 'comment').then(() =>
+    dropTriggerThatUpdatesUpdatedAt(knex, 'comment'),
   );
 }
 

@@ -2,7 +2,7 @@ import { TABLES } from '../../constants.js';
 import { dropTableFully } from '../utils.js';
 
 function up(knex) {
-  return knex.schema.createTable(TABLES.USER, (table) => {
+  return knex.schema.createTable('user', (table) => {
     table.increments('id');
     table.string('name').notNullable();
     table.string('email').notNullable().unique();
@@ -14,7 +14,7 @@ function up(knex) {
 }
 
 function down(knex) {
-  return dropTableFully(knex, TABLES.USER);
+  return dropTableFully(knex, 'user');
 }
 
 export { up, down };

@@ -8,19 +8,19 @@ import {
 } from '../utils.js';
 
 function up(knex) {
-  return knex.schema.createTable(TABLES.REACTION, (table) => {
+  return knex.schema.createTable('reaction', (table) => {
     table.increments('id');
     table
       .integer('user_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.USER)
+      .inTable('user')
       .onDelete('CASCADE');
     table
       .integer('post_id')
       .notNullable()
       .references('id')
-      .inTable(TABLES.POST)
+      .inTable('post')
       .onDelete('CASCADE');
     table
       .enum('type', ['like', 'love', 'laugh', 'shock', 'sad', 'angry'])
@@ -30,7 +30,7 @@ function up(knex) {
 }
 
 function down(knex) {
-  return dropTableFully(knex, TABLES.REACTION);
+  return dropTableFully(knex, 'reaction');
 }
 
 export { up, down };

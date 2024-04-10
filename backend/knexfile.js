@@ -17,5 +17,6 @@ export default {
   seeds: {
     directory: basePath('src', 'db', 'seeds'),
   },
+  debug: true,
   ...knexSnakeCaseMappers(),
 };

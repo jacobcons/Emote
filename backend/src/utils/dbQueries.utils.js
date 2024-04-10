@@ -7,10 +7,10 @@ export function paginate(query, page = 1, limit = 10) {
 }
 
 export async function getFriendIds(userId) {
-  const friendIdsA = knex(TABLES.FRIENDSHIP)
+  const friendIdsA = knex('friendship')
     .select('user2Id as friendId')
     .where('user1Id', userId);
-  const friendIdsB = knex(TABLES.FRIENDSHIP)
+  const friendIdsB = knex('friendship')
     .select('user1Id as friendId')
     .where('user2Id', userId);
   await Promise.all([friendIdsA, friendIdsB]);

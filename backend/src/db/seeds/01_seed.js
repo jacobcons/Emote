@@ -11,7 +11,7 @@ export async function seed(knex) {
   await Promise.all(truncateTablePromises);
 
   // seed user table
-  await knex(TABLES.USER).insert([
+  await knex('user').insert([
     {
       name: 'joe',
       email: 'joe@gmail.com',
@@ -60,7 +60,7 @@ export async function seed(knex) {
   ]);
 
   // seed friendship table
-  await knex(TABLES.FRIENDSHIP).insert([
+  await knex('friendship').insert([
     {
       user1Id: 1,
       user2Id: 2,
@@ -84,7 +84,7 @@ export async function seed(knex) {
   ]);
 
   // seed friend_request table
-  await knex(TABLES.FRIEND_REQUEST).insert([
+  await knex('friend_request').insert([
     {
       senderId: 1,
       receiverId: 4,
@@ -108,7 +108,7 @@ export async function seed(knex) {
   ]);
 
   // seed post table
-  await knex(TABLES.POST).insert([
+  await knex('post').insert([
     {
       userId: 1,
       text: 'paints',
@@ -129,7 +129,7 @@ export async function seed(knex) {
   ]);
 
   // seed comment table
-  await knex(TABLES.COMMENT).insert([
+  await knex('comment').insert([
     {
       userId: 2,
       postId: 1,
@@ -153,7 +153,7 @@ export async function seed(knex) {
   ]);
 
   // seed reaction table
-  await knex(TABLES.REACTION).insert([
+  await knex('reaction').insert([
     {
       userId: 2,
       postId: 1,

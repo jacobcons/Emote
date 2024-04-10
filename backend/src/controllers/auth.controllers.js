@@ -11,7 +11,7 @@ export async function register(req, res, next) {
   const { name, email, password } = req.body;
 
   try {
-    const [user] = await knex(TABLES.USER)
+    const [user] = await knex('user')
       .insert({
         name,
         email,
@@ -35,7 +35,7 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
   const { email, password } = req.body;
 
-  const user = await knex(TABLES.USER).first('id', 'password').where({ email });
+  const user = await knex('user').first('id', 'password').where({ email });
   const incorrectLoginError = createError(401, 'Incorrect login details');
   if (!user) {
     return next(incorrectLoginError);

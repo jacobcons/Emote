@@ -9,7 +9,7 @@ import { getFriendIds, paginate } from '../utils/dbQueries.utils.js';
 async function getFriendshipStatuses(currentUserId) {
   const friendshipStatuses = new Map();
 
-  const friendRequests = await knex(TABLES.FRIEND_REQUEST)
+  const friendRequests = await knex('friend_request')
     .select('sender_id', 'receiver_id')
     .where({ senderId: currentUserId })
     .orWhere({ receiverId: currentUserId });
@@ -32,7 +32,7 @@ export async function getUsers(req, res) {
   const friendshipStatuses = await getFriendshipStatuses(currentUserId);
 
   const { q, page } = req.query;
-  let query = knex(TABLES.USER)
+  let query = knex('user')
     .select('id', 'name', 'profileImage')
     .whereNot('id', currentUserId);
   if (q) {
@@ -50,41 +50,46 @@ export async function getUsers(req, res) {
 
 export async function getUser(req, res, next) {
   const userId = req.params.id;
-  const user = await knex(TABLES.USER)
-    .first('id', 'name', 'email', 'cover_image', 'profile_image', 'bio')
-    .where('id', userId);
+  const currentUserId = req.user.id;
+  const user = await knex
+    .raw(
+      `
+    SELECT u.id, 
+           name, 
+           email, 
+           cover_image, 
+           profile_image, 
+           bio,
+           f.user1_id,
+           f.user2_id,
+           CASE
+             WHEN fr.sender_id = :currentUserId THEN '${FRIENDSHIP_STATUS.REQUEST_SENT}'
+             WHEN fr.receiver_id = :currentUserId THEN '${FRIENDSHIP_STATUS.REQUEST_RECEIVED}'
+             WHEN f.user1_id IS NOT NULL THEN '${FRIENDSHIP_STATUS.FRIENDS}'
+             ELSE '${FRIENDSHIP_STATUS.NO_REQUEST}'
+            END friendship_status
+    FROM "user" AS u
+    LEFT JOIN "friend_request" AS fr
+      ON (u.id = fr.sender_id AND fr.receiver_id = :currentUserId) OR (u.id = fr.receiver_id AND fr.sender_id = :currentUserId)
+    LEFT JOIN "friendship" AS f
+      ON (u.id = f.user1_id AND f.user2_id = :currentUserId) OR (u.id = f.user2_id AND f.user1_id = :currentUserId)
+    WHERE u.id = :userId
+    LIMIT 1
+    `,
+      { userId, currentUserId },
+    )
+    .then((res) => Object.values(res.rows));
+
   if (!user) {
     checkResourceExists(user, userId);
   }
 
-  const currentUserId = req.user.id;
-  let friendshipStatus;
-  const friendRequest = await knex(TABLES.FRIEND_REQUEST)
-    .first('sender_id', 'receiver_id')
-    .where({ senderId: currentUserId, receiverId: userId })
-    .orWhere({ senderId: userId, receiverId: currentUserId });
-  if (friendRequest) {
-    const { senderId } = friendRequest;
-    friendshipStatus =
-      senderId === currentUserId
-        ? FRIENDSHIP_STATUS.REQUEST_SENT
-        : FRIENDSHIP_STATUS.REQUEST_RECEIVED;
-  } else {
-    const friendship = await knex(TABLES.FRIENDSHIP)
-      .first('user1_id', 'user2_id')
-      .where({ user1Id: currentUserId, user2Id: userId })
-      .orWhere({ user1Id: userId, user2Id: currentUserId });
-    friendshipStatus = friendship
-      ? FRIENDSHIP_STATUS.FRIENDS
-      : FRIENDSHIP_STATUS.NO_REQUEST;
-  }
-
-  res.json({ ...user, friendshipStatus });
+  res.json({ ...user });
 }
 
 export async function updateCurrentUser(req, res) {
   const currentUserId = req.user.id;
-  const [user] = await knex(TABLES.USER)
+  const [user] = await knex('user')
     .update(req.body, ['id', 'name', 'coverImage', 'profileImage', 'bio'])
     .where({ id: currentUserId });
 

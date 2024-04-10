@@ -18,3 +18,7 @@ export async function getFriendIds(userId) {
     .union(friendIdsA, friendIdsB)
     .then((friendIds) => friendIds.map(({ friendId }) => friendId));
 }
+
+export async function dbQuery(sql, bindings) {
+  return knex.raw(sql, bindings).then((res) => res.rows);
+}

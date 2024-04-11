@@ -1,7 +1,7 @@
 import { knex } from '../db/connection.js';
 import { checkResourceExists } from '../utils/errors.utils.js';
 import { FRIENDSHIP_STATUS } from '../constants.js';
-import { dbQuery } from '../utils/dbQueries.utils.js';
+import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
 const getUsersSql = `
 SELECT u.id, 
@@ -27,7 +27,19 @@ LEFT JOIN "friendship" AS f
 
 export async function getUsers(req, res) {
   const currentUserId = req.user.id;
-  const users = await dbQuery(getUsersSql, { currentUserId });
+  const { q, page = 1, limit = 10 } = req.query;
+
+  const sql = `
+    ${getUsersSql}
+    WHERE name LIKE '%:q%'
+    LIMIT :limit OFFSET :offset
+  `;
+  const users = await dbQuery(sql, {
+    currentUserId,
+    q,
+    limit,
+    offset: calculateOffset(page, limit),
+  });
 
   res.json(users);
 }
@@ -35,14 +47,13 @@ export async function getUsers(req, res) {
 export async function getUser(req, res, next) {
   const userId = req.params.id;
   const currentUserId = req.user.id;
-  const [user] = await dbQuery(
-    `
+
+  const sql = `
       ${getUsersSql}
       WHERE u.id = :userId
       LIMIT 1
-      `,
-    { userId, currentUserId },
-  );
+      `;
+  const [user] = await dbQuery(sql, { userId, currentUserId });
 
   if (!user) {
     checkResourceExists(user, userId);

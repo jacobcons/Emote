@@ -75,5 +75,5 @@ export async function updateCurrentUser(req, res) {
     .update(req.body, ['id', 'name', 'coverImage', 'profileImage', 'bio'])
     .where({ id: currentUserId });
 
-  res.jslon(user);
+  res.json(user);
 }

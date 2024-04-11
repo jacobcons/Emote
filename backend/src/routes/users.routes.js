@@ -12,14 +12,7 @@ import {
 } from '../middlewares/validation.middlewares.js';
 
 const router = express.Router();
-
-router.route('/').get(validateQuery(getUsersSchema), getUsers);
-
-router
-  .route('/me')
-  .all(validateBody(updateUserSchema))
-  .patch(updateCurrentUser);
-
-router.route('/:id').all(validateIds('id')).get(getUser);
-
+router.get('/', validateQuery(getUsersSchema), getUsers);
+router.patch('/me', validateBody(updateUserSchema), updateCurrentUser);
+router.get('/:id', validateIds('id'), getUser);
 export default router;

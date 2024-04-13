@@ -55,9 +55,7 @@ export async function getUser(req, res, next) {
       `;
   const [user] = await dbQuery(sql, { userId, currentUserId });
 
-  if (!user) {
-    checkResourceExists(user, userId);
-  }
+  checkResourceExists(user, userId);
 
   res.json(user);
 }

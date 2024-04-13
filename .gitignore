@@ -3,4 +3,4 @@ backend/.env*
 
 # IDE / text editor
 .vscode/
-../.idea/
+.idea/

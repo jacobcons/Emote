@@ -21,11 +21,11 @@ use the built-in AI translator to convert your plaintext to emojis.
 
 #### Users -
 - GET /users?q=&page=&limit= (include friendship status)
-- Users GET, PATCH /users/<id>
+- GET, PATCH /users/:id
 
 #### Posts -
 - GET /friendships/posts?page=&limit= (include reactions, a few comments)
-- GET /users/<id>/posts?page=&limit=
+- GET /users/:id/posts?page=&limit=
 - POST /posts
 - PATCH, DELETE /posts/:id
 

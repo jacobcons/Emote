@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { emojiSchema } from './emoji.schemas.js';
 
 export const getUsersSchema = Joi.object({
-  q: Joi.string(),
+  q: Joi.string().required(),
   page: Joi.number().integer().positive(),
   limit: Joi.number().integer().positive(),
 });

@@ -1,5 +1,4 @@
 import { knex } from '../db/connection.js';
-import { TABLES } from '../constants.js';
 
 export function paginate(query, page = 1, limit = 10) {
   const offset = (page - 1) * limit;

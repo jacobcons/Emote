@@ -5,7 +5,6 @@ import {
   attachTokenCookieToResponse,
   hashPassword,
 } from '../utils/auth.utils.js';
-import { TABLES } from '../constants.js';
 
 export async function register(req, res, next) {
   const { name, email, password } = req.body;

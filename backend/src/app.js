@@ -1,8 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
-import authRouter from './routes/auth.routes.js';
-import usersRouter from './routes/users.routes.js';
-import { uploadImage } from './controllers/uploadImage.controllers.js';
+import authRouter from './routers/auth.router.js';
+import usersRouter from './routers/users.router.js';
+import { uploadImage } from './handlers/uploadImage.handlers.js';
 import { errorHandler, notFound } from './middlewares/errors.middlewares.js';
 import morgan from 'morgan';
 import { verifyToken } from './middlewares/auth.middlewares.js';

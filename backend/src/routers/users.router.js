@@ -4,7 +4,7 @@ import {
   getUser,
   getUsers,
   updateCurrentUser,
-} from '../controllers/users.controllers.js';
+} from '../handlers/users.handlers.js';
 import {
   validateBody,
   validateIds,

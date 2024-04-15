@@ -1,7 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
-import authRouter from './routers/auth.router.js';
-import usersRouter from './routers/users.router.js';
+import { router as authRouter } from './routers/auth.router.js';
+import { router as usersRouter } from './routers/users.router.js';
+import { router as postsRouter } from './routers/posts.router.js';
 import { uploadImage } from './handlers/uploadImage.handlers.js';
 import { errorHandler, notFound } from './middlewares/errors.middlewares.js';
 import morgan from 'morgan';
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);
+app.use(postsRouter);
 app.post(
   '/upload-image',
   fileUpload({

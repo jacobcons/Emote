@@ -1,14 +1,28 @@
 import express from 'express';
-import { registerSchema, loginSchema } from '../schemas/auth.schemas.js';
-import { login, register, logout } from '../handlers/auth.handlers.js';
+import { login, logout, register } from '../handlers/auth.handlers.js';
 import { validateBody } from '../middlewares/validation.middlewares.js';
+import Joi from 'joi';
 
-const router = express.Router();
-
-router.post('/register', validateBody(registerSchema), register);
-
-router.post('/login', validateBody(loginSchema), login);
-
+export const router = express.Router();
+router.post(
+  '/register',
+  validateBody(
+    Joi.object({
+      name: Joi.string().min(3).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(1).required(),
+    }),
+  ),
+  register,
+);
+router.post(
+  '/login',
+  validateBody(
+    Joi.object({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }),
+  ),
+  login,
+);
 router.post('/logout', logout);
-
-export default router;

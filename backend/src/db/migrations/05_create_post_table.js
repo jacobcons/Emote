@@ -1,4 +1,3 @@
-import { TABLES } from '../../constants.js';
 import {
   addCreatedAtColumnToTable,
   addUpdatedAtColumnToTable,
@@ -23,12 +22,7 @@ function up(knex) {
       table.string('image');
     })
     .then(() =>
-      knex.raw(`
-      CREATE TRIGGER update_job_updated_at 
-      BEFORE UPDATE ON post 
-      FOR EACH ROW 
-      EXECUTE PROCEDURE update_updated_at_column();
-    `),
+      createTriggerThatUpdatesUpdatedAt(knex, 'post')
     );
 }
 

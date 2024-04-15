@@ -1,6 +1,3 @@
-import knex from 'knex';
-
-import { TABLES } from '../../constants.js';
 import { dropTableFully } from '../utils.js';
 
 function up(knex) {

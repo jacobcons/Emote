@@ -1,11 +1,4 @@
-import { TABLES } from '../../constants.js';
-import {
-  addCreatedAtColumnToTable,
-  addUpdatedAtColumnToTable,
-  createTriggerThatUpdatesUpdatedAt,
-  dropTableFully,
-  dropTriggerThatUpdatesUpdatedAt,
-} from '../utils.js';
+import { dropTableFully } from '../utils.js';
 
 function up(knex) {
   return knex.schema.createTable('reaction', (table) => {

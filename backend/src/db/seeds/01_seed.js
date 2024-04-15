@@ -1,11 +1,11 @@
 import { hashPassword } from '../../utils/auth.utils.js';
-import { TABLES } from '../../constants.js';
 import { truncateTableFully } from '../utils.js';
 
 export async function seed(knex) {
   // Deletes ALL existing entries
   let truncateTablePromises = [];
-  for (const table of Object.values(TABLES)) {
+  const tables = ['user', 'friendship', 'friend_request', 'post', 'comment', 'reaction']
+  for (const table of tables) {
     truncateTablePromises.push(truncateTableFully(knex, table));
   }
   await Promise.all(truncateTablePromises);

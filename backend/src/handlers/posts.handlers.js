@@ -5,45 +5,73 @@ import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function getFriendsPosts(req, res) {
   const currentUserId = req.user.id;
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, commentLimit = 3 } = req.query;
 
   const sql = `
-    WITH "reaction_counts" AS (
-      SELECT post_id, type, COUNT(type) AS reaction_count
-      FROM reaction
-      GROUP BY post_id, type
-    ),
-    "post_with_reactions" AS (
+    WITH "post_with_reactions" AS (
       SELECT
-          post_id,
-          COALESCE(jsonb_object_agg(rc.type, rc.reaction_count) FILTER (WHERE rc.type IS NOT NULL), '{}') AS reactions
-      FROM "reaction_counts" as rc
+        post_id,
+        jsonb_object_agg(rc.type, rc.reaction_count) AS reactions
+      FROM (
+        SELECT post_id, type, COUNT(type) AS reaction_count
+        FROM reaction
+        GROUP BY post_id, type
+      ) AS rc
       GROUP BY post_id
     ),
     "post_with_comments" AS (
       SELECT
-        jsonb_object_agg(c.text, c.user_id) AS comments
-      FROM "comment" as c 
-      GROUP BY post_id
+        p.id as post_id,
+        json_agg(
+          json_build_object(
+            'id', c.id,
+            'created_at', c.created_at,
+            'updated_at', c.updated_at,
+            'text', c.text,
+            'user', json_build_object(
+                    'id', u.id,
+                    'name', u.name,
+                    'profile_image', u.profile_image
+                    )
+          )
+        ) AS comments
+      FROM "post" as p
+      JOIN LATERAL (
+        SELECT *
+        FROM "comment"
+        WHERE post_id = p.id
+        ORDER BY created_at DESC
+        LIMIT :commentLimit
+      ) AS c on true
+      JOIN "user" as u ON c.user_id = u.id
+      GROUP BY p.id
     )
-    SELECT *
+    
+    SELECT 
+      p.id,
+      p.created_at,
+      p.updated_at,
+      p.text,
+      p.image,
+      json_build_object(
+        'id', u.id,
+        'name', u.name,
+        'profile_image', u.profile_image
+      ) AS "user",
+      COALESCE(pr.reactions, '{}') AS reactions,
+      COALESCE(pc.comments, '[]') AS comments
     FROM "post" as p
-    JOIN "post_with_reactions" as pr
-      ON p.id = pr.post_id
-    LEFT JOIN "post_with_comments" as pc
-      ON p.id = pc.post_id
+    LEFT JOIN "user" as u ON p.user_id = u.id
+    LEFT JOIN "post_with_reactions" as pr ON p.id = pr.post_id
+    LEFT JOIN "post_with_comments" as pc ON p.id = pc.post_id
+    ORDER BY p.id
   `;
   const posts = await dbQuery(sql, {
     currentUserId,
     limit,
     offset: calculateOffset(page, limit),
+    commentLimit,
   });
-
-  // json_build_object(
-  //   'id', u.id,
-  //   'name', u.name,
-  //   'profile_image', u.profile_image
-  // ) as user
 
   res.json(posts);
 }

@@ -14,7 +14,9 @@ export async function getFriendsPosts(req, res) {
         jsonb_object_agg(rc.type, rc.reaction_count) AS reactions
       FROM (
         SELECT post_id, type, COUNT(type) AS reaction_count
-        FROM reaction
+        FROM "reaction" as r
+        JOIN "post" as p ON r.post_id = p.id
+        JOIN "friendship" as f ON (f.user1_id = :currentUserId AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId AND f.user1_id = p.user_id)
         GROUP BY post_id, type
       ) AS rc
       GROUP BY post_id
@@ -44,6 +46,7 @@ export async function getFriendsPosts(req, res) {
         LIMIT :commentLimit
       ) AS c on true
       JOIN "user" as u ON c.user_id = u.id
+      JOIN "friendship" as f ON (f.user1_id = :currentUserId AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId AND f.user1_id = p.user_id)
       GROUP BY p.id
     )
     
@@ -61,10 +64,12 @@ export async function getFriendsPosts(req, res) {
       COALESCE(pr.reactions, '{}') AS reactions,
       COALESCE(pc.comments, '[]') AS comments
     FROM "post" as p
+    JOIN "friendship" as f ON (f.user1_id = :currentUserId  AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId  AND f.user1_id = p.user_id)
     LEFT JOIN "user" as u ON p.user_id = u.id
     LEFT JOIN "post_with_reactions" as pr ON p.id = pr.post_id
     LEFT JOIN "post_with_comments" as pc ON p.id = pc.post_id
     ORDER BY p.id
+    LIMIT :limit OFFSET :offset
   `;
   const posts = await dbQuery(sql, {
     currentUserId,

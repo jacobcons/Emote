@@ -4,7 +4,14 @@ import { truncateTableFully } from '../utils.js';
 export async function seed(knex) {
   // Deletes ALL existing entries
   let truncateTablePromises = [];
-  const tables = ['user', 'friendship', 'friend_request', 'post', 'comment', 'reaction']
+  const tables = [
+    'user',
+    'friendship',
+    'friend_request',
+    'post',
+    'comment',
+    'reaction',
+  ];
   for (const table of tables) {
     truncateTablePromises.push(truncateTableFully(knex, table));
   }
@@ -110,16 +117,16 @@ export async function seed(knex) {
   // seed post table
   await knex('post').insert([
     {
-      userId: 1,
+      userId: 2,
       text: 'paints',
       image: 'https://shorturl.at/cFRY4',
     },
     {
-      userId: 1,
+      userId: 3,
       text: 'cats',
     },
     {
-      userId: 2,
+      userId: 7,
       text: 'dogs',
     },
     {
@@ -139,6 +146,11 @@ export async function seed(knex) {
       userId: 3,
       postId: 1,
       text: 'horrible paints!',
+    },
+    {
+      userId: 4,
+      postId: 1,
+      text: 'paint',
     },
     {
       userId: 1,
@@ -171,6 +183,16 @@ export async function seed(knex) {
     },
     {
       userId: 2,
+      postId: 2,
+      type: 'laugh',
+    },
+    {
+      userId: 5,
+      postId: 2,
+      type: 'laugh',
+    },
+    {
+      userId: 6,
       postId: 2,
       type: 'laugh',
     },

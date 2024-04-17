@@ -8,7 +8,8 @@ export async function getUsers(req, res) {
   const { q, page = 1, limit = 10 } = req.query;
 
   const sql = `
-    SELECT u.id, 
+    SELECT 
+      u.id, 
       name, 
       profile_image, 
       CASE
@@ -40,7 +41,8 @@ export async function getUser(req, res, next) {
   const currentUserId = req.user.id;
 
   const sql = `
-    SELECT u.id, 
+    SELECT 
+      u.id, 
       name, 
       email, 
       cover_image, 

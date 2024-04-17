@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);
-app.use(postsRouter);
+app.use(verifyToken, postsRouter);
 app.post(
   '/upload-image',
   fileUpload({

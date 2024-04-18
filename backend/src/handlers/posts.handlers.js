@@ -31,13 +31,14 @@ export async function getFriendsPosts(req, res) {
             'updated_at', c.updated_at,
             'text', c.text,
             'user', json_build_object(
-                    'id', u.id,
-                    'name', u.name,
-                    'profile_image', u.profile_image
+                      'id', u.id,
+                      'name', u.name,
+                      'profile_image', u.profile_image
                     )
           )
         ) AS comments
       FROM "post" as p
+      JOIN "friendship" as f ON (f.user1_id = :currentUserId AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId AND f.user1_id = p.user_id)
       JOIN LATERAL (
         SELECT *
         FROM "comment"
@@ -46,7 +47,6 @@ export async function getFriendsPosts(req, res) {
         LIMIT :commentLimit
       ) AS c on true
       JOIN "user" as u ON c.user_id = u.id
-      JOIN "friendship" as f ON (f.user1_id = :currentUserId AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId AND f.user1_id = p.user_id)
       GROUP BY p.id
     )
     
@@ -71,7 +71,33 @@ export async function getFriendsPosts(req, res) {
     ORDER BY p.id
     LIMIT :limit OFFSET :offset
   `;
-  const posts = await dbQuery(sql, {
+
+  const sql2 = `
+  SELECT 
+      p.id,
+      p.created_at,
+      p.updated_at,
+      p.text,
+      p.image,
+      json_build_object(
+        'id', u.id,
+        'name', u.name,
+        'profile_image', u.profile_image
+      ) AS "user",
+      pr.user_id,
+      pr.type,
+      pc.user_id,
+      pc.text
+    FROM "post" as p
+    JOIN "friendship" as f ON (f.user1_id = :currentUserId  AND f.user2_id = p.user_id) OR (f.user2_id = :currentUserId  AND f.user1_id = p.user_id)
+    LEFT JOIN "user" as u ON p.user_id = u.id
+    LEFT JOIN "reaction" as pr ON p.id = pr.post_id
+    LEFT JOIN "comment" as pc ON p.id = pc.post_id
+    LEFT JOIN "user" as uc ON pc.user_id = uc.id
+    ORDER BY p.id
+    LIMIT :limit OFFSET :offset
+  `;
+  const posts = await dbQuery(sql2, {
     currentUserId,
     limit,
     offset: calculateOffset(page, limit),

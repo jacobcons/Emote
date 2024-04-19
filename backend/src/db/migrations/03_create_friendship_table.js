@@ -16,6 +16,7 @@ function up(knex) {
       .inTable('user')
       .onDelete('CASCADE');
     table.unique(['user1_id', 'user2_id']);
+    table.check('user1_id != user2_id');
   });
 }
 

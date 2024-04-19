@@ -11,13 +11,17 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "make_seed": "knex seed:make",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "seed_large": "knex seed:run --specific=large.js",
+    "seed_small": "knex seed:run --specific=small.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "cross-env": "^7.0.3",
+    "emoji.json": "^15.1.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
@@ -34,6 +38,7 @@
     "cookie-parser": "^1.4.6",
     "date-fns": "^3.4.0",
     "dotenv": "^16.4.5",
+    "emoji-regex": "^10.3.0",
     "express": "^4.18.3",
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.5.0",

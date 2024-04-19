@@ -16,6 +16,7 @@ function up(knex) {
       .inTable('user')
       .onDelete('CASCADE');
     table.unique(['sender_id', 'receiver_id']);
+    table.check('sender_id != receiver_id');
   });
 }
 

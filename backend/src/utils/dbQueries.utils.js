@@ -9,19 +9,6 @@ export function calculateOffset(page = 1, limit) {
   return (page - 1) * limit;
 }
 
-export async function getFriendIds(userId) {
-  const friendIdsA = knex('friendship')
-    .select('user2Id as friendId')
-    .where('user1Id', userId);
-  const friendIdsB = knex('friendship')
-    .select('user1Id as friendId')
-    .where('user2Id', userId);
-  await Promise.all([friendIdsA, friendIdsB]);
-  return knex
-    .union(friendIdsA, friendIdsB)
-    .then((friendIds) => friendIds.map(({ friendId }) => friendId));
-}
-
 export async function dbQuery(sql, bindings) {
   return knex.raw(sql, bindings).then((res) => res.rows);
 }

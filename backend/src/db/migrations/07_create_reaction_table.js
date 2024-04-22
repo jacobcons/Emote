@@ -1,4 +1,5 @@
 import { dropTableFully } from '../utils.js';
+import { REACTION_TYPES } from '../../constants.js';
 
 function up(knex) {
   return knex.schema.createTable('reaction', (table) => {
@@ -15,9 +16,7 @@ function up(knex) {
       .references('id')
       .inTable('post')
       .onDelete('CASCADE');
-    table
-      .enum('type', ['like', 'love', 'laugh', 'shock', 'sad', 'angry'])
-      .notNullable();
+    table.enum('type', REACTION_TYPES).notNullable();
     table.unique(['user_id', 'post_id', 'type']);
   });
 }

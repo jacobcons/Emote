@@ -7,3 +7,12 @@ export const FRIENDSHIP_STATUS = {
 
 export const MAX_UPLOAD_SIZE_MB = 5;
 export const MAX_UPLOAD_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
+
+export const REACTION_TYPES = [
+  'like',
+  'love',
+  'laugh',
+  'shock',
+  'sad',
+  'angry',
+];

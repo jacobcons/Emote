@@ -11,7 +11,9 @@ function up(knex) {
 }
 
 function down(knex) {
-  return knex.raw(`DROP FUNCTION IF EXISTS update_updated_at_column;`);
+  return knex.raw(`
+    DROP FUNCTION IF EXISTS update_updated_at_column;
+  `);
 }
 
 export { up, down };

@@ -12,8 +12,8 @@
     "rollback": "knex migrate:rollback",
     "make_seed": "knex seed:make",
     "seed": "knex seed:run",
-    "seed_large": "knex seed:run --specific=large.js",
-    "seed_small": "knex seed:run --specific=small.js"
+    "large_seed": "knex seed:run --specific=large.js",
+    "small_seed": "knex seed:run --specific=small.js"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +43,7 @@
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.5.0",
     "fs-extra": "^11.2.0",
+    "humps": "^2.0.1",
     "joi": "^17.12.2",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",

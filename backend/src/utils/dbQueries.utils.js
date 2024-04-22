@@ -1,4 +1,5 @@
 import { knex } from '../db/connection.js';
+import humps from 'humps';
 
 export function paginate(query, page = 1, limit = 10) {
   const offset = (page - 1) * limit;
@@ -10,7 +11,7 @@ export function calculateOffset(page = 1, limit) {
 }
 
 export async function dbQuery(sql, bindings) {
-  return knex.raw(sql, bindings).then((res) => res.rows);
+  return knex.raw(sql, bindings).then((res) => humps.camelizeKeys(res.rows));
 }
 
 export async function dbQueryExplain(sql, bindings) {

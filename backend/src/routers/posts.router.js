@@ -19,3 +19,13 @@ router.get(
   ),
   getFriendsPosts,
 );
+router.get(
+  '/user/:id/posts',
+  validateIds('id'),
+  validateQuery(
+    Joi.object({
+      commentLimit: Joi.number().integer().positive(),
+    }).concat(paginateSchema),
+  ),
+  getFriendsPosts,
+);

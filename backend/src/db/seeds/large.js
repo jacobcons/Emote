@@ -1,5 +1,5 @@
 import { hashPassword } from '../../utils/auth.utils.js';
-import { truncateTableFully } from '../utils.js';
+import { truncateAllTables, truncateTableFully } from '../utils.js';
 import { faker } from '@faker-js/faker';
 import emojis from 'emoji.json/emoji-compact.json' with { type: 'json' };
 import { REACTION_TYPES } from '../../constants.js';
@@ -8,19 +8,7 @@ import { subYears } from 'date-fns';
 export async function seed(knex) {
   console.time();
   // Deletes ALL existing entries
-  let truncateTablePromises = [];
-  const tables = [
-    'user',
-    'friendship',
-    'friend_request',
-    'post',
-    'comment',
-    'reaction',
-  ];
-  for (const table of tables) {
-    truncateTablePromises.push(truncateTableFully(knex, table));
-  }
-  await Promise.all(truncateTablePromises);
+  await truncateAllTables(knex);
 
   // generate users to insert
   const NUMBER_OF_USERS = 10000;

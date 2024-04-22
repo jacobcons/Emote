@@ -1,21 +1,9 @@
 import { hashPassword } from '../../utils/auth.utils.js';
-import { truncateTableFully } from '../utils.js';
+import { truncateAllTables, truncateTableFully } from '../utils.js';
 
 export async function seed(knex) {
   // Deletes ALL existing entries
-  let truncateTablePromises = [];
-  const tables = [
-    'user',
-    'friendship',
-    'friend_request',
-    'post',
-    'comment',
-    'reaction',
-  ];
-  for (const table of tables) {
-    truncateTablePromises.push(truncateTableFully(knex, table));
-  }
-  await Promise.all(truncateTablePromises);
+  await truncateAllTables(knex);
 
   // seed user table
   await knex('user').insert([

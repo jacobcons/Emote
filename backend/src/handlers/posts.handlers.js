@@ -93,3 +93,7 @@ export async function getFriendsPosts(req, res) {
 
   res.json(posts);
 }
+
+export async function getUsersPosts(req, res) {
+  res.json({});
+}

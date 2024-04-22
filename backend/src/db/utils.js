@@ -1,9 +1,27 @@
+import { dbQuery } from '../utils/dbQueries.utils.js';
+
 export function dropTableFully(knex, tableName) {
   return knex.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE;`);
 }
 
 export function truncateTableFully(knex, tableName) {
   return knex.raw(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`);
+}
+
+export async function truncateAllTables(knex) {
+  const tables = await knex.raw(`
+      SELECT tablename
+      FROM pg_tables
+      WHERE schemaname = 'public' AND tablename NOT IN ('knex_migrations', 'knex_migrations_lock')
+    `);
+
+  // Generate an array of truncation promises
+  const truncateTablePromises = tables.rows.map(({ tablename }) =>
+    knex.raw(`TRUNCATE TABLE "${tablename}" RESTART IDENTITY CASCADE`),
+  );
+
+  // Execute all truncations
+  await Promise.all(truncateTablePromises);
 }
 
 export function createTriggerThatUpdatesUpdatedAt(knex, tableName) {

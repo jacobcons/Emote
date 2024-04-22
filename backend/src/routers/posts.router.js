@@ -1,6 +1,6 @@
 import express from 'express';
 import { paginateSchema } from '../schemas.js';
-import { getFriendsPosts } from '../handlers/posts.handlers.js';
+import { getFriendsPosts, getUsersPosts } from '../handlers/posts.handlers.js';
 import {
   validateBody,
   validateIds,
@@ -27,5 +27,5 @@ router.get(
       commentLimit: Joi.number().integer().positive(),
     }).concat(paginateSchema),
   ),
-  getFriendsPosts,
+  getUsersPosts,
 );

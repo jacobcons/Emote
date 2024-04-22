@@ -1,7 +1,11 @@
 import { knex } from '../db/connection.js';
 import { checkResourceExists } from '../utils/errors.utils.js';
 import { FRIENDSHIP_STATUS } from '../constants.js';
-import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
+import {
+  calculateOffset,
+  dbQuery,
+  explainDbQuery,
+} from '../utils/dbQueries.utils.js';
 
 export async function getFriendsPosts(req, res) {
   const currentUserId = req.user.id;
@@ -72,22 +76,12 @@ export async function getFriendsPosts(req, res) {
     LIMIT :limit OFFSET :offset
   `;
 
-  const sql2 = `
-  
-  `;
-  const analyse = true;
-  const explain = analyse ? 'EXPLAIN (ANALYSE, FORMAT JSON)' : '';
-  let posts = await dbQuery(explain + sql, {
+  let posts = await explainDbQuery(sql, {
     currentUserId,
     limit,
     offset: calculateOffset(page, limit),
     commentLimit,
   });
-
-  if (analyse) {
-    posts = posts[0]['QUERY PLAN'][0];
-    delete posts.Plan;
-  }
 
   res.json(posts);
 }

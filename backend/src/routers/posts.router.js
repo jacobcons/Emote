@@ -4,6 +4,8 @@ import {
   getFriendsPosts,
   getUsersPosts,
   createPost,
+  updatePost,
+  deletePost,
 } from '../handlers/posts.handlers.js';
 import {
   validateBody,
@@ -40,3 +42,11 @@ router.post(
   ),
   createPost,
 );
+router
+  .route('/posts/:id')
+  .all(validateIds('id'))
+  .patch(
+    validateBody(Joi.object({ text: emojiSchema, image: Joi.string().uri() })),
+    updatePost,
+  )
+  .delete(deletePost);

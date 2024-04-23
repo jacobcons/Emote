@@ -70,7 +70,7 @@ export async function getUser(req, res, next) {
     { userId, loggedInUserId },
   );
 
-  checkResourceExists(user, userId);
+  checkResourceExists(user);
 
   res.json(user);
 }

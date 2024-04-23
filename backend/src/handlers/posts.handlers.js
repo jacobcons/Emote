@@ -187,5 +187,29 @@ export async function createPost(req, res) {
   const userId = req.user.id;
   const [post] = await knex('post').insert({ ...req.body, userId }, ['*']);
 
+  res.status(201).json(post);
+}
+
+export async function updatePost(req, res) {
+  const postId = req.params.id;
+  const userId = req.user.id;
+  const [post] = await knex('post')
+    .update(req.body, ['*'])
+    .where({ id: postId, userId });
+
+  checkResourceExists(post);
+
   res.json(post);
+}
+
+export async function deletePost(req, res) {
+  const postId = req.params.id;
+  const userId = req.user.id;
+  const rowsDeleted = await knex('post')
+    .delete(req.body, ['*'])
+    .where({ id: postId, userId });
+
+  checkResourceExists(rowsDeleted);
+
+  res.status(204).end();
 }

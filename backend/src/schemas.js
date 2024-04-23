@@ -1,12 +1,16 @@
 import emojiRegex from 'emoji-regex';
 import Joi from 'joi';
 
+// ensure string contains at least 1 emoji, and only contains emojis and whitespace
 export const emojiSchema = Joi.string().custom((value, helpers) => {
   const regex = emojiRegex();
-  const strWithEmojisAndWhiteSpaceRemoved = value.replace(regex, '').trim();
-  return strWithEmojisAndWhiteSpaceRemoved.length === 0
+  const isStrOnlyEmojisOrWhitespace = !value.replace(regex, '').trim().length;
+  const isStrOnlyWhitespace = !value.trim().length;
+  return isStrOnlyEmojisOrWhitespace && !isStrOnlyWhitespace
     ? value
-    : helpers.message('{#label} must only contain emojis and whitespace');
+    : helpers.message(
+        '{#label} must contain at least one emoji, and only contain emojis and whitespace',
+      );
 });
 
 export const paginateSchema = Joi.object({

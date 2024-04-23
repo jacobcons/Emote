@@ -182,3 +182,10 @@ export async function getUsersPosts(req, res) {
 
   res.json(posts);
 }
+
+export async function createPost(req, res) {
+  const userId = req.user.id;
+  const [post] = await knex('post').insert({ ...req.body, userId }, ['*']);
+
+  res.json(post);
+}

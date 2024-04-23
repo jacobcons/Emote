@@ -6,11 +6,12 @@ export async function seed(knex) {
   await truncateAllTables(knex);
 
   // seed user table
+  const password = await hashPassword('123');
   await knex('user').insert([
     {
       name: 'joe',
       email: 'joe@gmail.com',
-      password: await hashPassword('1'),
+      password,
       coverImage:
         'https://media.istockphoto.com/id/1208738316/photo/abstract-geometric-network-polygon-globe-graphic-background.webp?b=1&s=170667a&w=0&k=20&c=Ewa2JDeA8E9k9ch3IYWkSYdEkTEhyaMNfNLkClag-j4=',
       profileImage:
@@ -20,37 +21,37 @@ export async function seed(knex) {
     {
       name: 'bob',
       email: 'bob@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'leo',
       email: 'leo@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'cat',
       email: 'cat@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'bat',
       email: 'bat@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'mat',
       email: 'mat@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'lat',
       email: 'lat@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
     {
       name: 'kat',
       email: 'kat@gmail.com',
-      password: await hashPassword('1'),
+      password,
     },
   ]);
 

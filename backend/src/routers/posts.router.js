@@ -20,7 +20,7 @@ router.get(
   getFriendsPosts,
 );
 router.get(
-  '/user/:id/posts',
+  '/users/:id/posts',
   validateIds('id'),
   validateQuery(
     Joi.object({

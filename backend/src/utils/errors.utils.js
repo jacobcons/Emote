@@ -7,6 +7,6 @@ export function createError(statusCode, message) {
 
 export function checkResourceExists(resource, id) {
   if (!resource) {
-    throw createError(404, `Resource with id <${id}> not found`);
+    throw createError(404, `Resource not found`);
   }
 }

@@ -1,5 +1,5 @@
 import { knex } from '../db/connection.js';
-import { assertResourceExists } from '../utils/errors.utils.js';
+import { checkResourceExists } from '../utils/errors.utils.js';
 import {
   calculateOffset,
   dbQuery,
@@ -202,7 +202,7 @@ export async function updatePost(req, res) {
     .update(req.body, ['*'])
     .where({ id: postId, userId });
 
-  assertResourceExists(post);
+  checkResourceExists(post);
 
   res.json(post);
 }
@@ -221,7 +221,7 @@ export async function deletePost(req, res) {
     },
   );
 
-  assertResourceExists(rowCount);
+  checkResourceExists(rowCount);
 
   res.status(204).end();
 }

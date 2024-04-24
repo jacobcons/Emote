@@ -1,7 +1,7 @@
 import { knex } from '../db/connection.js';
 import bcrypt from 'bcrypt';
 import {
-  assertNoUniqueConstraintViolation,
+  checkUniqueConstraintViolation,
   createError,
 } from '../utils/errors.utils.js';
 import {
@@ -25,7 +25,7 @@ export async function register(req, res, next) {
     attachTokenCookieToResponse(user.id, res);
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
-    assertNoUniqueConstraintViolation(
+    checkUniqueConstraintViolation(
       err,
       `User with email ${email} is already registered`,
     );

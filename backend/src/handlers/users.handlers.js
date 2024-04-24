@@ -1,5 +1,5 @@
 import { knex } from '../db/connection.js';
-import { assertResourceExists } from '../utils/errors.utils.js';
+import { checkResourceExists } from '../utils/errors.utils.js';
 import { FRIENDSHIP_STATUS } from '../constants.js';
 import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
@@ -70,7 +70,7 @@ export async function getUser(req, res, next) {
     { userId, loggedInUserId },
   );
 
-  assertResourceExists(user);
+  checkResourceExists(user);
 
   res.json(user);
 }

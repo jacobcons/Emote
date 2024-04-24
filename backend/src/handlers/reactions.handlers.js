@@ -1,7 +1,8 @@
 import { knex } from '../db/connection.js';
 import {
-  assertNoUniqueConstraintViolation,
-  assertResourceExists,
+  checkUniqueConstraintViolation,
+  checkResourceExists,
+  checkForeignKeyConstraintViolation,
 } from '../utils/errors.utils.js';
 import { dbQuery } from '../utils/dbQueries.utils.js';
 
@@ -23,13 +24,13 @@ export async function createReaction(req, res) {
         type,
       },
     );
-    res.json(reaction);
+    res.status(201).json(reaction);
   } catch (err) {
-    assertNoUniqueConstraintViolation(
+    checkUniqueConstraintViolation(
       err,
       `Logged in user has already reacted to this post`,
     );
-    console.log(err);
+    checkForeignKeyConstraintViolation(err);
     throw err;
   }
 }
@@ -52,11 +53,28 @@ export async function updateReaction(req, res) {
       type,
     },
   );
+
+  checkResourceExists(reaction);
+
   res.json(reaction);
 }
 
 export async function deleteReaction(req, res) {
-  const loggedInUserId = req.user.id;
+  const userId = req.user.id;
   const postId = req.params.id;
-  res.json({});
+
+  const { rowCount } = await knex.raw(
+    `
+    DELETE FROM reaction
+    WHERE user_id = :userId AND post_id = :postId
+    `,
+    {
+      userId,
+      postId,
+    },
+  );
+
+  checkResourceExists(rowCount);
+
+  res.status(204).end();
 }

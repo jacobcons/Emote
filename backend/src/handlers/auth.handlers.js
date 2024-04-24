@@ -5,18 +5,20 @@ import {
   attachTokenCookieToResponse,
   hashPassword,
 } from '../utils/auth.utils.js';
+import { dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function register(req, res, next) {
   const { name, email, password } = req.body;
 
   try {
-    const [user] = await knex('user')
-      .insert({
-        name,
-        email,
-        password: await hashPassword(password),
-      })
-      .returning('id');
+    const [user] = await dbQuery(
+      `
+      INSERT INTO "user"(name, email, password)
+      VALUES (:name, :email, :password)
+      RETURNING id
+    `,
+      { name, email, password: await hashPassword(password) },
+    );
     attachTokenCookieToResponse(user.id, res);
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
@@ -34,7 +36,15 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
   const { email, password } = req.body;
 
-  const user = await knex('user').first('id', 'password').where({ email });
+  const [user] = await dbQuery(
+    `
+    SELECT id, password
+    FROM "user"
+    WHERE email = :email
+    LIMIT 1
+    `,
+    { email },
+  );
   const incorrectLoginError = createError(401, 'Incorrect login details');
   if (!user) {
     return next(incorrectLoginError);

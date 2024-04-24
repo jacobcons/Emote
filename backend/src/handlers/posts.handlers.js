@@ -205,11 +205,18 @@ export async function updatePost(req, res) {
 export async function deletePost(req, res) {
   const postId = req.params.id;
   const userId = req.user.id;
-  const rowsDeleted = await knex('post')
-    .delete(req.body, ['*'])
-    .where({ id: postId, userId });
+  const { rowCount } = await knex.raw(
+    `
+    DELETE FROM post
+    WHERE id = :postId AND user_id = :userId
+    `,
+    {
+      postId,
+      userId,
+    },
+  );
 
-  checkResourceExists(rowsDeleted);
+  checkResourceExists(rowCount);
 
   res.status(204).end();
 }

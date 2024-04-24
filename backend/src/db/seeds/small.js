@@ -156,7 +156,7 @@ export async function seed(knex) {
   // seed reaction table
   await knex('reaction').insert([
     {
-      userId: 2,
+      userId: 1,
       postId: 1,
       type: 'like',
     },

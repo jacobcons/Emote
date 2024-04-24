@@ -1,6 +1,5 @@
 import { knex } from '../db/connection.js';
 import { checkResourceExists } from '../utils/errors.utils.js';
-import { FRIENDSHIP_STATUS } from '../constants.js';
 import {
   calculateOffset,
   dbQuery,
@@ -25,10 +24,12 @@ export async function getFriendsPosts(req, res) {
           'id', u.id,
           'name', u.name,
           'profile_image', u.profile_image
-        ) AS "user"
+        ) AS "user",
+        r.type AS "loggedInUserReaction"
       FROM post as p
       JOIN friendship as f ON (f.user1_id = :loggedInUserId  AND f.user2_id = p.user_id) OR (f.user2_id = :loggedInUserId AND f.user1_id = p.user_id)
       LEFT JOIN "user" as u ON p.user_id = u.id
+      LEFT JOIN "reaction" as r ON p.id = r.post_id AND r.user_id = :loggedInUserId
       ORDER BY p.created_at DESC
       LIMIT :limit OFFSET :offset
     ),
@@ -38,17 +39,17 @@ export async function getFriendsPosts(req, res) {
         post_id,
         jsonb_object_agg(reaction_type_count.type, reaction_type_count.count) AS reactions
       FROM (
-        SELECT up.id as post_id, r.type, COUNT(r.type) AS count
-        FROM friends_post as up
-        JOIN reaction as r ON up.id = r.post_id
-        GROUP BY up.id, r.type
+        SELECT fp.id as post_id, r.type, COUNT(r.type) AS count
+        FROM friends_post as fp
+        JOIN reaction as r ON fp.id = r.post_id
+        GROUP BY fp.id, r.type
       ) AS reaction_type_count
       GROUP BY post_id
     ),
     -- foreach post chosen earlier, get array of comment objects containing details of comment and user who made it
     post_with_comments AS (
       SELECT
-        up.id as post_id,
+        fp.id as post_id,
         json_agg(
           json_build_object(
             'id', c.id,
@@ -62,27 +63,27 @@ export async function getFriendsPosts(req, res) {
                     )
           )
           ORDER BY c.created_at DESC) AS comments
-      FROM friends_post as up
+      FROM friends_post as fp
       JOIN LATERAL (
         SELECT *
         FROM comment
-        WHERE post_id = up.id
+        WHERE post_id = fp.id
         ORDER BY created_at DESC
         LIMIT :commentLimit
       ) AS c on true
       JOIN "user" as u ON c.user_id = u.id
-      GROUP BY up.id
+      GROUP BY fp.id
     )
     
     -- join up the posts chosen earlier along with its reactions and comments
     SELECT 
-      up.*,
+      fp.*,
       COALESCE(pr.reactions, '{}') AS reactions,
       COALESCE(pc.comments, '[]') AS comments
-    FROM friends_post as up
-    LEFT JOIN post_with_reactions as pr ON up.id = pr.post_id
-    LEFT JOIN post_with_comments as pc ON up.id = pc.post_id
-    ORDER BY up.created_at DESC
+    FROM friends_post as fp
+    LEFT JOIN post_with_reactions as pr ON fp.id = pr.post_id
+    LEFT JOIN post_with_comments as pc ON fp.id = pc.post_id
+    ORDER BY fp.created_at DESC
     `,
     {
       loggedInUserId,
@@ -96,12 +97,13 @@ export async function getFriendsPosts(req, res) {
 }
 
 export async function getUsersPosts(req, res) {
+  const loggedInUserId = req.user.id;
   const userId = req.params.id;
   const { page = 1, limit = 10, commentLimit = 3 } = req.query;
 
   const posts = await dbQuery(
     `
-    -- get page of posts by given user, get details of post and user who made it
+    -- get page of posts by given user, get details of post, user who made it and reaction made by logged in user
     WITH users_post AS (
       SELECT
         p.id,
@@ -113,9 +115,11 @@ export async function getUsersPosts(req, res) {
           'id', u.id,
           'name', u.name,
           'profile_image', u.profile_image
-        ) AS "user"
+        ) AS "user",
+        r.type AS "loggedInUserReaction"
       FROM post as p
       LEFT JOIN "user" as u ON p.user_id = u.id
+      LEFT JOIN "reaction" as r ON p.id = r.post_id AND r.user_id = :loggedInUserId
       WHERE p.user_id = :userId
       ORDER BY p.created_at DESC
       LIMIT :limit OFFSET :offset
@@ -173,6 +177,7 @@ export async function getUsersPosts(req, res) {
     ORDER BY up.created_at DESC
     `,
     {
+      loggedInUserId,
       userId,
       limit,
       offset: calculateOffset(page, limit),

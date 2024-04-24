@@ -1,6 +1,9 @@
 import { knex } from '../db/connection.js';
 import bcrypt from 'bcrypt';
-import { createError } from '../utils/errors.utils.js';
+import {
+  assertNoUniqueConstraintViolation,
+  createError,
+} from '../utils/errors.utils.js';
 import {
   attachTokenCookieToResponse,
   hashPassword,
@@ -22,14 +25,11 @@ export async function register(req, res, next) {
     attachTokenCookieToResponse(user.id, res);
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
-    const UNIQUE_CONSTRAINT_VIOLATION = '23505';
-    const userWithSameEmail = err.code === UNIQUE_CONSTRAINT_VIOLATION;
-    if (userWithSameEmail) {
-      return next(
-        createError(409, `User with email ${email} is already registered`),
-      );
-    }
-    return next(err);
+    assertNoUniqueConstraintViolation(
+      err,
+      `User with email ${email} is already registered`,
+    );
+    throw err;
   }
 }
 

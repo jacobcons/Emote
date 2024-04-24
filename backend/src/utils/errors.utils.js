@@ -5,8 +5,22 @@ export function createError(statusCode, message) {
   };
 }
 
-export function checkResourceExists(resource) {
+export function assertResourceExists(resource) {
   if (!resource) {
     throw createError(404, `Resource not found`);
+  }
+}
+
+export function assertNoUniqueConstraintViolation(err, message) {
+  const UNIQUE_CONSTRAINT_VIOLATION = '23505';
+  if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
+    throw createError(409, message);
+  }
+}
+
+export function assertNoForeignKeyViolation(err, message) {
+  const UNIQUE_CONSTRAINT_VIOLATION = '23505';
+  if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
+    throw createError(409, message);
   }
 }

@@ -17,7 +17,7 @@ function up(knex) {
       .inTable('post')
       .onDelete('CASCADE');
     table.enum('type', REACTION_TYPES).notNullable();
-    table.unique(['user_id', 'post_id', 'type']);
+    table.unique(['user_id', 'post_id']);
   });
 }
 

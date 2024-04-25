@@ -96,7 +96,7 @@ export async function getFriendsPosts(req, res) {
   res.json(posts);
 }
 
-export async function getUsersPosts(req, res) {
+export async function getUserPosts(req, res) {
   const loggedInUserId = req.user.id;
   const userId = req.params.id;
   const { page = 1, limit = 10, commentLimit = 3 } = req.query;

@@ -2,7 +2,7 @@ import express from 'express';
 import { emojiSchema, paginateSchema } from '../schemas.js';
 import {
   getFriendsPosts,
-  getUsersPosts,
+  getUserPosts,
   createPost,
   updatePost,
   deletePost,
@@ -33,7 +33,7 @@ router.get(
       commentLimit: Joi.number().integer().positive(),
     }).concat(paginateSchema),
   ),
-  getUsersPosts,
+  getUserPosts,
 );
 router.post(
   '/posts',

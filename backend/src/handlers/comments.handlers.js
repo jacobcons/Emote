@@ -4,10 +4,27 @@ import {
   checkResourceExists,
   checkForeignKeyConstraintViolation,
 } from '../utils/errors.utils.js';
-import { dbQuery } from '../utils/dbQueries.utils.js';
+import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function getPostComments(req, res) {
-  res.json({});
+  const postId = req.params.id;
+  const { page = 1, limit = 10 } = req.query;
+
+  const comments = await dbQuery(
+    `
+    SELECT *
+    FROM comment as c 
+    WHERE c.post_id = :postId
+    LIMIT :limit OFFSET :offset
+    `,
+    {
+      postId,
+      limit,
+      offset: calculateOffset(page, limit),
+    },
+  );
+
+  res.json(comments);
 }
 
 export async function createPostComment(req, res) {

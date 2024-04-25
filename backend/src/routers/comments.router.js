@@ -20,6 +20,7 @@ router.get(
   validateQuery(paginateSchema),
   getPostComments,
 );
+
 const validateTextInBody = validateBody(
   Joi.object({ text: emojiSchema.required() }),
 );

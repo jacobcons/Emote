@@ -10,7 +10,7 @@ import Joi from 'joi';
 import { REACTION_TYPES } from '../constants.js';
 
 export const router = express.Router();
-const typeInBody = validateBody(
+const validateTypeInBody = validateBody(
   Joi.object({
     type: Joi.string()
       .valid(...REACTION_TYPES)
@@ -19,6 +19,6 @@ const typeInBody = validateBody(
 );
 router
   .route('/posts/:id/reactions')
-  .post(typeInBody, createReaction)
-  .patch(typeInBody, updateReaction)
+  .post(validateTypeInBody, createReaction)
+  .patch(validateTypeInBody, updateReaction)
   .delete(deleteReaction);

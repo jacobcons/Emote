@@ -7,7 +7,7 @@ import {
 } from '../utils/dbQueries.utils.js';
 
 export async function getFriendsPosts(req, res) {
-  const loggedInUserId = req.user.id;
+  const userId = req.user.id;
   const { page = 1, limit = 10, commentLimit = 3 } = req.query;
 
   const posts = await dbQuery(
@@ -27,9 +27,9 @@ export async function getFriendsPosts(req, res) {
         ) AS "user",
         r.type AS "loggedInUserReaction"
       FROM post as p
-      JOIN friendship as f ON (f.user1_id = :loggedInUserId  AND f.user2_id = p.user_id) OR (f.user2_id = :loggedInUserId AND f.user1_id = p.user_id)
+      JOIN friendship as f ON (f.user1_id = :userId  AND f.user2_id = p.user_id) OR (f.user2_id = :userId AND f.user1_id = p.user_id)
       LEFT JOIN "user" as u ON p.user_id = u.id
-      LEFT JOIN "reaction" as r ON p.id = r.post_id AND r.user_id = :loggedInUserId
+      LEFT JOIN "reaction" as r ON p.id = r.post_id AND r.user_id = :userId
       ORDER BY p.created_at DESC
       LIMIT :limit OFFSET :offset
     ),
@@ -86,7 +86,7 @@ export async function getFriendsPosts(req, res) {
     ORDER BY fp.created_at DESC
     `,
     {
-      loggedInUserId,
+      userId,
       limit,
       offset: calculateOffset(page, limit),
       commentLimit,
@@ -196,8 +196,8 @@ export async function createPost(req, res) {
 }
 
 export async function updatePost(req, res) {
-  const postId = req.params.id;
   const userId = req.user.id;
+  const postId = req.params.id;
   const [post] = await knex('post')
     .update(req.body, ['*'])
     .where({ id: postId, userId });
@@ -208,8 +208,8 @@ export async function updatePost(req, res) {
 }
 
 export async function deletePost(req, res) {
-  const postId = req.params.id;
   const userId = req.user.id;
+  const postId = req.params.id;
   const { rowCount } = await knex.raw(
     `
     DELETE FROM post

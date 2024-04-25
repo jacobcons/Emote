@@ -76,10 +76,10 @@ export async function getUser(req, res, next) {
 }
 
 export async function updateCurrentUser(req, res) {
-  const loggedInUserId = req.user.id;
+  const userId = req.user.id;
   const [user] = await knex('user')
     .update(req.body, ['id', 'name', 'coverImage', 'profileImage', 'bio'])
-    .where({ id: loggedInUserId });
+    .where({ id: userId });
 
   res.json(user);
 }

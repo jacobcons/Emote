@@ -12,8 +12,18 @@ export async function getPostComments(req, res) {
 
   const comments = await dbQuery(
     `
-    SELECT *
-    FROM comment as c 
+    SELECT 
+      c.id, 
+      c.created_at, 
+      c.updated_at,
+      c.text,
+      json_build_object(
+        'id', u.id,
+        'name', u.name,
+        'profile_image', u.profile_image
+      ) AS "user"
+    FROM comment as c
+    JOIN "user" as u ON c.user_id = u.id
     WHERE c.post_id = :postId
     LIMIT :limit OFFSET :offset
     `,
@@ -28,7 +38,28 @@ export async function getPostComments(req, res) {
 }
 
 export async function createPostComment(req, res) {
-  res.json({});
+  const userId = req.user.id;
+  const postId = req.params.id;
+  const { text } = req.body;
+
+  try {
+    const [comment] = await dbQuery(
+      `
+    INSERT INTO comment(user_id, post_id, text) 
+    VALUES (:userId, :postId, :text)
+    RETURNING *
+    `,
+      {
+        userId,
+        postId,
+        text,
+      },
+    );
+    res.json(comment);
+  } catch (err) {
+    checkForeignKeyConstraintViolation(err);
+    throw err;
+  }
 }
 
 export async function updateComment(req, res) {

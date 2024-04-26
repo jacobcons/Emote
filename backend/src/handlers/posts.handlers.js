@@ -196,8 +196,8 @@ export async function createPost(req, res) {
 }
 
 export async function updatePost(req, res) {
-  const userId = req.user.id;
   const postId = req.params.id;
+  const userId = req.user.id;
   const [post] = await knex('post')
     .update(req.body, ['*'])
     .where({ id: postId, userId });
@@ -208,8 +208,8 @@ export async function updatePost(req, res) {
 }
 
 export async function deletePost(req, res) {
-  const userId = req.user.id;
   const postId = req.params.id;
+  const userId = req.user.id;
   const { rowCount } = await knex.raw(
     `
     DELETE FROM post

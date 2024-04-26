@@ -25,6 +25,7 @@ export async function getPostComments(req, res) {
     FROM comment as c
     JOIN "user" as u ON c.user_id = u.id
     WHERE c.post_id = :postId
+    ORDER BY c.created_at DESC
     LIMIT :limit OFFSET :offset
     `,
     {
@@ -63,9 +64,45 @@ export async function createPostComment(req, res) {
 }
 
 export async function updateComment(req, res) {
-  res.json({});
+  const commentId = req.params.id;
+  const userId = req.user.id;
+  const { text } = req.body;
+
+  const [comment] = await dbQuery(
+    `
+    UPDATE comment
+    SET text = :text
+    WHERE id = :commentId AND user_id = :userId 
+    RETURNING *
+    `,
+    {
+      userId,
+      commentId,
+      text,
+    },
+  );
+
+  checkResourceExists(comment);
+
+  res.json(comment);
 }
 
 export async function deleteComment(req, res) {
-  res.json({});
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  const { rowCount } = await knex.raw(
+    `
+    DELETE FROM comment
+    WHERE id = :commentId AND user_id = :userId
+    `,
+    {
+      commentId,
+      userId,
+    },
+  );
+
+  checkResourceExists(rowCount);
+
+  res.status(204).end();
 }

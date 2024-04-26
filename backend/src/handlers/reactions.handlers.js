@@ -7,20 +7,20 @@ import {
 import { dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function createReaction(req, res) {
-  const userId = req.user.id;
   const postId = req.params.id;
+  const userId = req.user.id;
   const { type } = req.body;
 
   try {
     const [reaction] = await dbQuery(
       `
-    INSERT INTO reaction(user_id, post_id, type) 
-    VALUES (:userId, :postId, :type)
+    INSERT INTO reaction(post_id, user_id, type) 
+    VALUES (:postId, :userId, :type)
     RETURNING *
     `,
       {
-        userId,
         postId,
+        userId,
         type,
       },
     );
@@ -36,20 +36,20 @@ export async function createReaction(req, res) {
 }
 
 export async function updateReaction(req, res) {
-  const userId = req.user.id;
   const postId = req.params.id;
+  const userId = req.user.id;
   const { type } = req.body;
 
   const [reaction] = await dbQuery(
     `
     UPDATE reaction
     SET type = :type
-    WHERE user_id = :userId AND post_id = :postId
+    WHERE post_id = :postId AND user_id = :userId 
     RETURNING *
     `,
     {
-      userId,
       postId,
+      userId,
       type,
     },
   );
@@ -60,17 +60,17 @@ export async function updateReaction(req, res) {
 }
 
 export async function deleteReaction(req, res) {
-  const userId = req.user.id;
   const postId = req.params.id;
+  const userId = req.user.id;
 
   const { rowCount } = await knex.raw(
     `
     DELETE FROM reaction
-    WHERE user_id = :userId AND post_id = :postId
+    WHERE post_id = :postId AND user_id = :userId 
     `,
     {
-      userId,
       postId,
+      userId,
     },
   );
 

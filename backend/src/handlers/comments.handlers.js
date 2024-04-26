@@ -55,7 +55,7 @@ export async function createPostComment(req, res) {
         text,
       },
     );
-    res.json(comment);
+    res.status(201).json(comment);
   } catch (err) {
     checkForeignKeyConstraintViolation(err);
     throw err;

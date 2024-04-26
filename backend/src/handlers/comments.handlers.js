@@ -1,6 +1,5 @@
 import { knex } from '../db/connection.js';
 import {
-  checkUniqueConstraintViolation,
   checkResourceExists,
   checkForeignKeyConstraintViolation,
 } from '../utils/errors.utils.js';

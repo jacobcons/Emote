@@ -40,7 +40,57 @@ export async function getFriendRequests(req, res) {
 }
 
 export async function createFriendRequest(req, res) {
-  res.json({});
+  const userId = req.params.userId;
+  const loggedInUserId = req.user.id;
+  await knex.transaction(async (trx) => {
+    const [{ exists: areFriends }] = await dbQuery(
+      `
+      SELECT EXISTS(
+        SELECT 1
+        FROM friendship
+        WHERE (user1_id = :userId AND user2_id = :loggedInUserId) OR (user1_id = :loggedInUserId AND user2_id = :userId)
+      )
+      `,
+      { userId, loggedInUserId },
+      trx,
+    );
+    if (areFriends) {
+      throw createError(409, `You are already friends with user<${userId}>`);
+    }
+
+    const [{ exists: isFriendRequest }] = await dbQuery(
+      `
+      SELECT EXISTS(
+          SELECT 1
+          FROM friend_request
+          WHERE (sender_id = :userId AND receiver_id = :loggedInUserId) OR (sender_id = :loggedInUserId AND receiver_id = :userId)
+      )
+      `,
+      { userId, loggedInUserId },
+      trx,
+    );
+    if (isFriendRequest) {
+      throw createError(
+        409,
+        `There already is an incoming/outgoing friend request with user<${userId}>`,
+      );
+    }
+
+    try {
+      const [friendRequest] = await dbQuery(
+        `INSERT INTO friend_request(sender_id, receiver_id)
+       VALUES (:loggedInUserId, :userId)
+       RETURNING *`,
+        { userId, loggedInUserId },
+        trx,
+      );
+      await trx.commit();
+      return res.status(201).json(friendRequest);
+    } catch (err) {
+      checkForeignKeyConstraintViolation(err, `User<${userId}> doesn't exist`);
+      throw err;
+    }
+  });
 }
 
 export async function deleteFriendRequest(req, res) {

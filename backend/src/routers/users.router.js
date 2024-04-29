@@ -17,7 +17,7 @@ router.get(
   '/',
   validateQuery(
     Joi.object({
-      q: Joi.string().required(),
+      q: Joi.string(),
     }).concat(paginateSchema),
   ),
   getUsers,

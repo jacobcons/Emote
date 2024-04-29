@@ -5,7 +5,7 @@ import {
 } from '../utils/errors.utils.js';
 import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
-export async function getPostComments(req, res) {
+export async function getComments(req, res) {
   const postId = req.params.id;
   const { page = 1, limit = 10 } = req.query;
 
@@ -37,7 +37,7 @@ export async function getPostComments(req, res) {
   res.json(comments);
 }
 
-export async function createPostComment(req, res, next) {
+export async function createComment(req, res, next) {
   const userId = req.user.id;
   const postId = req.params.id;
   const { text } = req.body;

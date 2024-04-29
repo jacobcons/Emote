@@ -5,7 +5,7 @@ import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function getUsers(req, res) {
   const loggedInUserId = req.user.id;
-  const { q, page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, q = '' } = req.query;
 
   const users = await dbQuery(
     `

@@ -1,8 +1,8 @@
 import express from 'express';
 import { emojiSchema, paginateSchema } from '../schemas.js';
 import {
-  getPostComments,
-  createPostComment,
+  getComments,
+  createComment,
   updateComment,
   deleteComment,
 } from '../handlers/comments.handlers.js';
@@ -18,7 +18,7 @@ router.get(
   '/posts/:id/comments',
   validateIds('id'),
   validateQuery(paginateSchema),
-  getPostComments,
+  getComments,
 );
 
 const validateTextInBody = validateBody(
@@ -28,7 +28,7 @@ router.post(
   '/posts/:id/comments',
   validateIds('id'),
   validateTextInBody,
-  createPostComment,
+  createComment,
 );
 router
   .route('/comments/:id')

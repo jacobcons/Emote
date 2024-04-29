@@ -1,9 +1,9 @@
 import express from 'express';
 import { paginateSchema } from '../schemas.js';
 import {
-  getFriendships,
-  createFriendship,
-  deleteFriendship,
+  getFriendRequests,
+  createFriendRequest,
+  deleteFriendRequest,
 } from '../handlers/friendships.handlers.js';
 import {
   validateIds,
@@ -13,17 +13,17 @@ import Joi from 'joi';
 
 export const router = express.Router();
 router.get(
-  '/users/:id/friendships',
-  validateIds('id'),
+  '/',
   validateQuery(
     Joi.object({
       q: Joi.string(),
+      type: Joi.valid(['incoming', 'outgoing']).required(),
     }).concat(paginateSchema),
   ),
-  getFriendships,
+  getFriendRequests,
 );
 router
-  .route('/friendships/:userId')
+  .route('/:userId')
   .all(validateIds('userId'))
-  .post(createFriendship)
-  .delete(deleteFriendship);
+  .post(createFriendRequest)
+  .delete(deleteFriendRequest);

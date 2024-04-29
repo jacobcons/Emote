@@ -7,9 +7,9 @@ import {
 } from '../utils/errors.utils.js';
 import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 
-export async function getUserFriendships(req, res) {
+export async function getFriendships(req, res) {
   const userId = req.params.id;
-  const { page = 1, limit = 10, q = '%' } = req.query;
+  const { page = 1, limit = 10, q = '' } = req.query;
 
   const friendships = await dbQuery(
     `

@@ -4,12 +4,13 @@ import {
   getFriendRequests,
   createFriendRequest,
   deleteFriendRequest,
-} from '../handlers/friendships.handlers.js';
+} from '../handlers/friendRequests.handlers.js';
 import {
   validateIds,
   validateQuery,
 } from '../middlewares/validation.middlewares.js';
 import Joi from 'joi';
+import { FRIEND_REQUEST_TYPES } from '../constants.js';
 
 export const router = express.Router();
 router.get(
@@ -17,7 +18,7 @@ router.get(
   validateQuery(
     Joi.object({
       q: Joi.string(),
-      type: Joi.valid(['incoming', 'outgoing']).required(),
+      type: Joi.valid(...Object.values(FRIEND_REQUEST_TYPES)).required(),
     }).concat(paginateSchema),
   ),
   getFriendRequests,

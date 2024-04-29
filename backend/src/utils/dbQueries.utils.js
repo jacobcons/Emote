@@ -6,7 +6,7 @@ export function paginate(query, page = 1, limit = 10) {
   return query.offset(offset).limit(limit);
 }
 
-export function calculateOffset(page = 1, limit) {
+export function calculateOffset(page, limit) {
   return (page - 1) * limit;
 }
 

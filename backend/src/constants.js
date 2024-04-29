@@ -17,3 +17,8 @@ export const REACTION_TYPES = [
   'sad',
   'angry',
 ];
+
+export const FRIEND_REQUEST_TYPES = {
+  INCOMING: 'incoming',
+  OUTGOING: 'outgoing',
+};

@@ -6,7 +6,7 @@ import {
 } from '../utils/errors.utils.js';
 import { dbQuery } from '../utils/dbQueries.utils.js';
 
-export async function createReaction(req, res) {
+export async function createReaction(req, res, next) {
   const postId = req.params.id;
   const userId = req.user.id;
   const { type } = req.body;
@@ -31,7 +31,7 @@ export async function createReaction(req, res) {
       `Logged in user has already reacted to this post`,
     );
     checkForeignKeyConstraintViolation(err);
-    throw err;
+    return next(err);
   }
 }
 

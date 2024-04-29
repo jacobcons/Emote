@@ -37,7 +37,7 @@ export async function getPostComments(req, res) {
   res.json(comments);
 }
 
-export async function createPostComment(req, res) {
+export async function createPostComment(req, res, next) {
   const userId = req.user.id;
   const postId = req.params.id;
   const { text } = req.body;
@@ -58,7 +58,7 @@ export async function createPostComment(req, res) {
     res.status(201).json(comment);
   } catch (err) {
     checkForeignKeyConstraintViolation(err);
-    throw err;
+    return next(err);
   }
 }
 

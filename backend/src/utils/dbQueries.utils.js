@@ -10,8 +10,11 @@ export function calculateOffset(page = 1, limit) {
   return (page - 1) * limit;
 }
 
-export async function dbQuery(sql, bindings) {
-  return knex.raw(sql, bindings).then((res) => humps.camelizeKeys(res.rows));
+export async function dbQuery(sql, bindings, conn) {
+  const connection = conn || knex;
+  return connection
+    .raw(sql, bindings)
+    .then((res) => humps.camelizeKeys(res.rows));
 }
 
 export async function dbQueryExplain(sql, bindings) {

@@ -29,7 +29,7 @@ export async function register(req, res, next) {
       err,
       `User with email ${email} is already registered`,
     );
-    throw err;
+    return next(err);
   }
 }
 

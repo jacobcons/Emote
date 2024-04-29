@@ -5,11 +5,9 @@ export function createError(statusCode, message) {
   };
 }
 
-export const resourceNotFound = createError(404, `Resource not found`);
-
-export function checkResourceExists(resource) {
+export function checkResourceExists(resource, message = 'Resource not found') {
   if (!resource) {
-    throw resourceNotFound;
+    throw createError(404, message);
   }
 }
 
@@ -20,9 +18,12 @@ export function checkUniqueConstraintViolation(err, message) {
   }
 }
 
-export function checkForeignKeyConstraintViolation(err) {
+export function checkForeignKeyConstraintViolation(
+  err,
+  message = 'Resource not found',
+) {
   const FOREIGN_KEY_CONSTRAINT_VIOLATION_ERROR_CODE = '23503';
   if (err.code === FOREIGN_KEY_CONSTRAINT_VIOLATION_ERROR_CODE) {
-    throw resourceNotFound;
+    throw createError(404, message);
   }
 }

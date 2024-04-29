@@ -1,6 +1,10 @@
 import express from 'express';
 import { paginateSchema } from '../schemas.js';
-import { getUserFriendships } from '../handlers/friendships.handlers.js';
+import {
+  getUserFriendships,
+  createFriendship,
+  deleteFriendship,
+} from '../handlers/friendships.handlers.js';
 import {
   validateIds,
   validateQuery,
@@ -18,3 +22,8 @@ router.get(
   ),
   getUserFriendships,
 );
+router
+  .route('/friendships/:userId')
+  .all(validateIds('userId'))
+  .post(createFriendship)
+  .delete(deleteFriendship);

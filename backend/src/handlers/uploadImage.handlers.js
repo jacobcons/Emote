@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadImage = async (req, res) => {
+export const uploadImage = async (req, res, next) => {
   let file;
   let tempFilePath;
   if (req.files) {
@@ -17,17 +17,19 @@ export const uploadImage = async (req, res) => {
   }
 
   if (!file) {
-    throw createError(400, 'No file provided');
+    return next(createError(400, 'No file provided'));
   }
 
   if (!file.mimetype.startsWith('image')) {
     await remove(tempFilePath);
-    throw createError(400, 'Upload must be an image');
+    return next(createError(400, 'Upload must be an image'));
   }
 
   if (file.truncated) {
     await remove(tempFilePath);
-    throw createError(400, `Upload cannot exceed ${MAX_UPLOAD_SIZE_MB}MB`);
+    return next(
+      createError(400, `Upload cannot exceed ${MAX_UPLOAD_SIZE_MB}MB`),
+    );
   }
 
   try {
@@ -38,6 +40,6 @@ export const uploadImage = async (req, res) => {
     return res.json({ url: result.secure_url });
   } catch (err) {
     await remove(tempFilePath);
-    throw err;
+    return next(err);
   }
 };

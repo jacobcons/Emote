@@ -64,7 +64,7 @@ export async function createFriendship(req, res, next) {
       trx,
     );
     await trx.commit();
-    return res.json(friendship);
+    return res.status(201).json(friendship);
   });
 }
 

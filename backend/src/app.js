@@ -15,6 +15,9 @@ import { errors as celebrateErrorHandler } from 'celebrate';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import { MAX_UPLOAD_SIZE_BYTES } from './constants.js';
+import { translateTextToEmojis } from './handlers/translateTextToEmojis.handlers.js';
+import Joi from 'joi';
+import { validateQuery } from './middlewares/validation.middlewares.js';
 
 const app = express();
 
@@ -39,6 +42,12 @@ app.post(
     },
   }),
   uploadImage,
+);
+app.get(
+  '/translate-text-to-emojis',
+  verifyToken,
+  validateQuery(Joi.object({ text: Joi.string().required() })),
+  translateTextToEmojis,
 );
 
 app.use(notFound, celebrateErrorHandler(), errorHandler);

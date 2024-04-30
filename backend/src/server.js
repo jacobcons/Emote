@@ -1,6 +1,4 @@
-import './utils/env.utils.js';
-import { app } from "./app.js";
-
+import { app } from './app.js';
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

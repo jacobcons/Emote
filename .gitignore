@@ -1,6 +1,5 @@
 **/node_modules/
-backend/.env*
-backend/data.pgdump
+backend/env.bat
 
 # IDE / text editor
 .vscode/

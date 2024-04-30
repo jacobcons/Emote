@@ -72,7 +72,7 @@ export async function createFriendRequest(req, res) {
     if (isFriendRequest) {
       throw createError(
         409,
-        `There already is an incoming/outgoing friend request with user<${userId}>`,
+        `Friend request with user<${userId}> already exists`,
       );
     }
 
@@ -94,5 +94,24 @@ export async function createFriendRequest(req, res) {
 }
 
 export async function deleteFriendRequest(req, res) {
-  res.json({});
+  const userId = req.params.userId;
+  const loggedInUserId = req.user.id;
+
+  const { rowCount } = await knex.raw(
+    `
+      DELETE FROM friend_request
+      WHERE (sender_id = :userId AND receiver_id = :loggedInUserId) OR (sender_id = :loggedInUserId AND receiver_id = :userId)
+      `,
+    {
+      userId,
+      loggedInUserId,
+    },
+  );
+
+  checkResourceExists(
+    rowCount,
+    `Friend request with user<${userId}> does not exist`,
+  );
+
+  res.status(204).end();
 }

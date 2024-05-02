@@ -1,13 +1,9 @@
-import { knex } from '../db/connection.js';
 import bcrypt from 'bcrypt';
 import {
   checkUniqueConstraintViolation,
   createError,
 } from '../utils/errors.utils.js';
-import {
-  attachTokenCookieToResponse,
-  hashPassword,
-} from '../utils/auth.utils.js';
+import { createToken, hashPassword } from '../utils/auth.utils.js';
 import { dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function register(req, res, next) {
@@ -22,8 +18,7 @@ export async function register(req, res, next) {
     `,
       { name, email, password: await hashPassword(password) },
     );
-    attachTokenCookieToResponse(user.id, res);
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ token: createToken(user.id) });
   } catch (err) {
     checkUniqueConstraintViolation(
       err,
@@ -55,11 +50,5 @@ export async function login(req, res, next) {
     return next(incorrectLoginError);
   }
 
-  attachTokenCookieToResponse(user.id, res);
-  res.json({ message: 'Login successful' });
-}
-
-export function logout(req, res) {
-  res.clearCookie('token');
-  res.json({ message: 'Logout successful' });
+  res.json({ token: createToken(user.id) });
 }

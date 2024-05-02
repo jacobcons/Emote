@@ -1,5 +1,5 @@
 import OpenAi from 'openai';
-const openai = new OpenAi();
+//const openai = new OpenAi();
 
 export async function translateTextToEmojis(req, res) {
   const completion = await openai.chat.completions.create({

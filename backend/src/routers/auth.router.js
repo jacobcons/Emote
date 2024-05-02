@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, logout, register } from '../handlers/auth.handlers.js';
+import { login, register } from '../handlers/auth.handlers.js';
 import { validateBody } from '../middlewares/validation.middlewares.js';
 import Joi from 'joi';
 
@@ -25,4 +25,3 @@ router.post(
   ),
   login,
 );
-router.post('/logout', logout);

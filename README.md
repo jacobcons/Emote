@@ -5,6 +5,13 @@ use the built-in AI translator to convert your plaintext to emojis.
 
 This is just the backend API built with Node, Express.js and PostgreSQL
 
+## Features
+- Feed of friends posts
+- React to posts using various emojis
+- Comment on posts
+- Friend request system
+- Translate plaintext into pure emojis using chat-gpt with OpenAi API 
+
 ## Api docs
 Coming soon
 

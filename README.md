@@ -44,11 +44,11 @@ Coming soon
 - [ ] Deploy to digital ocean using docker
 
 ## Wireframes
-<img src="./docs/1.jpg" width="200">
-<img src="./docs/2.jpg" width="200">
-<img src="./docs/3.jpg" width="200">
-<img src="./docs/4.jpg" width="200">
-<img src="./docs/5.jpg" width="200">
+<img src="./docs/1.jpg" width="450">
+<img src="./docs/2.jpg" width="450">
+<img src="./docs/3.jpg" width="450">
+<img src="./docs/4.jpg" width="450">
+<img src="./docs/5.jpg" width="450">
 
 ## ER diagram
 ![ER diagram](./docs/er-diagram.png)

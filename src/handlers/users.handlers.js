@@ -69,7 +69,7 @@ export async function getUser(req, res, next) {
     { userId, loggedInUserId },
   );
 
-  checkResourceExists(user);
+  checkResourceExists(user, `User with ID <${userId}> not found`);
 
   res.json(user);
 }

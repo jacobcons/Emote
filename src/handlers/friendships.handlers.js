@@ -53,7 +53,7 @@ export async function createFriendship(req, res, next) {
     );
     checkResourceExists(
       rowCount,
-      `Incoming friend request from user <${userId}> does not exist`,
+      `Incoming friend request from user with ID <${userId}> not found`,
     );
 
     const [friendship] = await dbQuery(
@@ -85,7 +85,7 @@ export async function deleteFriendship(req, res, next) {
 
   checkResourceExists(
     rowCount,
-    `Friendship with user <${userId}> does not exist`,
+    `Friendship with user with ID <${userId}> not found`,
   );
 
   res.status(204).end();

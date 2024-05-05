@@ -202,7 +202,10 @@ export async function updatePost(req, res) {
     .update(req.body, ['*'])
     .where({ id: postId, userId });
 
-  checkResourceExists(post);
+  checkResourceExists(
+    post,
+    `Post with ID <${postId}> belonging to the logged-in user not found`,
+  );
 
   res.json(post);
 }
@@ -221,7 +224,10 @@ export async function deletePost(req, res) {
     },
   );
 
-  checkResourceExists(rowCount);
+  checkResourceExists(
+    rowCount,
+    `Post with ID <${postId}> belonging to the logged-in user not found`,
+  );
 
   res.status(204).end();
 }

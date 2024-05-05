@@ -57,7 +57,10 @@ export async function createComment(req, res, next) {
     );
     res.status(201).json(comment);
   } catch (err) {
-    checkForeignKeyConstraintViolation(err);
+    checkForeignKeyConstraintViolation(
+      err,
+      `Post with ID <${postId}> not found`,
+    );
     return next(err);
   }
 }
@@ -81,7 +84,10 @@ export async function updateComment(req, res) {
     },
   );
 
-  checkResourceExists(comment);
+  checkResourceExists(
+    comment,
+    `Comment with ID <${commentId}> belonging to logged-in user not found`,
+  );
 
   res.json(comment);
 }
@@ -101,7 +107,10 @@ export async function deleteComment(req, res) {
     },
   );
 
-  checkResourceExists(rowCount);
+  checkResourceExists(
+    rowCount,
+    `Comment with ID <${commentId}> belonging to logged-in user not found`,
+  );
 
   res.status(204).end();
 }

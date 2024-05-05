@@ -87,7 +87,10 @@ export async function createFriendRequest(req, res) {
       await trx.commit();
       return res.status(201).json(friendRequest);
     } catch (err) {
-      checkForeignKeyConstraintViolation(err, `User<${userId}> doesn't exist`);
+      checkForeignKeyConstraintViolation(
+        err,
+        `User with ID <${userId}> not found`,
+      );
       throw err;
     }
   });
@@ -110,7 +113,7 @@ export async function deleteFriendRequest(req, res) {
 
   checkResourceExists(
     rowCount,
-    `Friend request with user<${userId}> does not exist`,
+    `Friend request with user with ID <${userId}> not found`,
   );
 
   res.status(204).end();

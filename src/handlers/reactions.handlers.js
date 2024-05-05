@@ -28,9 +28,12 @@ export async function createReaction(req, res, next) {
   } catch (err) {
     checkUniqueConstraintViolation(
       err,
-      `Logged in user has already reacted to this post`,
+      `Logged-in user has already reacted to this post`,
     );
-    checkForeignKeyConstraintViolation(err);
+    checkForeignKeyConstraintViolation(
+      err,
+      `Post with ID <${postId}> not found`,
+    );
     return next(err);
   }
 }
@@ -54,7 +57,7 @@ export async function updateReaction(req, res) {
     },
   );
 
-  checkResourceExists(reaction);
+  checkResourceExists(reaction, `Post with ID <${postId}> not found`);
 
   res.json(reaction);
 }
@@ -74,7 +77,7 @@ export async function deleteReaction(req, res) {
     },
   );
 
-  checkResourceExists(rowCount);
+  checkResourceExists(rowCount, `Post with ID <${postId}> not found`);
 
   res.status(204).end();
 }

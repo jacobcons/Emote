@@ -11,7 +11,10 @@ export function checkResourceExists(resource, message = 'Resource not found') {
   }
 }
 
-export function checkUniqueConstraintViolation(err, message) {
+export function checkUniqueConstraintViolation(
+  err,
+  message = 'Unique constraint violation',
+) {
   const UNIQUE_CONSTRAINT_VIOLATION_ERROR_CODE = '23505';
   if (err.code === UNIQUE_CONSTRAINT_VIOLATION_ERROR_CODE) {
     throw createError(409, message);

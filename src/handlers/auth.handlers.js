@@ -7,6 +7,7 @@ import { createToken, hashPassword } from '../utils/auth.utils.js';
 import { dbQuery } from '../utils/dbQueries.utils.js';
 
 export async function register(req, res, next) {
+  throw Error();
   const { name, email, password } = req.body;
 
   try {

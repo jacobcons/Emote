@@ -1,0 +1,1180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Emote",
+    "description": "An API for managing users, posts, comments, and reactions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Base Environment"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register",
+        "description": "Registers a new user with a name, email, and password and returns a JWT if registration is successful.",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123",
+                    "minLength": 3
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful, user created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzE0ODU3NjA5LCJleHAiOjE3NDY0MTUyMDl9.H55HQ4jyNIz25l95ORfmIIldZ_bEqq1H-ZN-rNswkKI"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "description": "User with email is already registered"
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Authenticates a user based on provided email and password credentials. On successful validation and authentication, it returns a JWT for use in subsequent API requests.",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzU2NDE3LCJleHAiOjE3NDYzMTQwMTd9.NqdhqwpdTrJtyKOa2waudgWlRBBd824upzwhuZG-t5Y"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "description": "Unauthorized - Incorrect login details"
+          }
+        },
+        "security": []
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Search and paginate users",
+        "description": "Retrieves a list of users based on search criteria and pagination.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search query to filter users by name.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number of the results to fetch.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "profileImage": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "friendshipStatus": {
+                        "type": "string",
+                        "enum": [
+                          "SELF",
+                          "FRIENDS",
+                          "REQUEST_RECEIVED",
+                          "REQUEST_SENT",
+                          "NO_REQUEST"
+                        ]
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "id": 1,
+                      "name": "John Doe",
+                      "profileImage": "https://example.com/images/profile/1.jpg",
+                      "friendshipStatus": "SELF"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Jane Doe",
+                      "profileImage": null,
+                      "friendshipStatus": "FRIENDS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User with given id not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get a specific user",
+        "description": "Retrieves detailed information about a specific user.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "profileImage": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "friendshipStatus": {
+                      "type": "string",
+                      "enum": ["SELF", "FRIENDS", "REQUEST_RECEIVED", "REQUEST_SENT", "NO_REQUEST"]
+                    }
+                  },
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "profileImage": "https://example.com/images/profile/1.jpg",
+                    "friendshipStatus": "FRIENDS"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User with given id not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/me": {
+      "patch": {
+        "summary": "Update current user profile",
+        "description": "Updates profile information for the current user.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3
+                  },
+                  "coverImage": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "profileImage": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "bio": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Alice Johnson",
+                  "coverImage": "https://example.com/images/cover/1.jpg",
+                  "profileImage": "https://example.com/images/profile/1.jpg",
+                  "bio": "😀🎉🌟"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "coverImage": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "profileImage": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "bio": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "id": 1,
+                    "name": "Alice Johnson",
+                    "coverImage": "https://example.com/images/cover/1.jpg",
+                    "profileImage": "https://example.com/images/profile/1.jpg",
+                    "bio": "😀🎉🌟"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/friendships/posts": {
+      "get": {
+        "description": "",
+        "summary": "Get friends' posts",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          },
+          {
+            "name": "limit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          },
+          {
+            "name": "commentLimit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/posts": {
+      "get": {
+        "description": "",
+        "summary": "Get user's posts",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": "2"
+            }
+          },
+          {
+            "name": "commentLimit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts": {
+      "post": {
+        "description": "",
+        "summary": "Create post",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "👍 "
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://youtube.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "patch": {
+        "description": "",
+        "summary": "Update post",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://imgur.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "summary": "Delete post",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}/reactions": {
+      "post": {
+        "description": "",
+        "summary": "Create reaction",
+        "tags": [
+          "Reactions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "like"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "description": "",
+        "summary": "Update reaction",
+        "tags": [
+          "Reactions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "angry"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "summary": "Delete reaction",
+        "tags": [
+          "Reactions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}/comments": {
+      "post": {
+        "description": "",
+        "summary": "Create comment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "👍👍👍"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "description": "",
+        "summary": "Get comments",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          },
+          {
+            "name": "limit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "patch": {
+        "description": "",
+        "summary": "Update comment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "😀"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "summary": "Delete comment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/friendships": {
+      "get": {
+        "description": "",
+        "summary": "Get friendships",
+        "tags": [
+          "Friendships"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          },
+          {
+            "name": "limit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          },
+          {
+            "name": "q",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friendships/{userId}": {
+      "post": {
+        "description": "",
+        "summary": "Create friendship",
+        "tags": [
+          "Friendships"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "summary": "Delete friendship",
+        "tags": [
+          "Friendships"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friend-requests": {
+      "get": {
+        "description": "",
+        "summary": "Get friend requests",
+        "tags": [
+          "Friend Requests"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "c"
+            }
+          },
+          {
+            "name": "type",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "incoming"
+            }
+          },
+          {
+            "name": "page",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friend-requests/{userId}": {
+      "post": {
+        "description": "",
+        "summary": "Create friend request",
+        "tags": [
+          "Friend Requests"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "summary": "Delete friend request",
+        "tags": [
+          "Friend Requests"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/upload-image": {
+      "post": {
+        "description": "",
+        "summary": "Upload image",
+        "tags": ["Misc"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/translate-text-to-emojis": {
+      "get": {
+        "description": "",
+        "summary": "Translate text to emojis",
+        "tags": ["Misc"],
+        "parameters": [
+          {
+            "name": "text",
+            "description": "",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "afsdfasd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Validation failed"
+      },
+      "401": {
+        "description": "No token provided/Invalid token"
+      }
+    }
+  }
+}

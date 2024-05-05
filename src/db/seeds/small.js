@@ -9,8 +9,8 @@ export async function seed(knex) {
   const password = await hashPassword('123');
   await knex('user').insert([
     {
-      name: 'joe',
-      email: 'joe@gmail.com',
+      name: '1',
+      email: '1@gmail.com',
       password,
       coverImage:
         'https://media.istockphoto.com/id/1208738316/photo/abstract-geometric-network-polygon-globe-graphic-background.webp?b=1&s=170667a&w=0&k=20&c=Ewa2JDeA8E9k9ch3IYWkSYdEkTEhyaMNfNLkClag-j4=',
@@ -19,38 +19,38 @@ export async function seed(knex) {
       bio: 'hey there partner',
     },
     {
-      name: 'bob',
-      email: 'bob@gmail.com',
+      name: '2',
+      email: '2@gmail.com',
       password,
     },
     {
-      name: 'leo',
-      email: 'leo@gmail.com',
+      name: '3',
+      email: '3@gmail.com',
       password,
     },
     {
-      name: 'cat',
-      email: 'cat@gmail.com',
+      name: '4',
+      email: '4@gmail.com',
       password,
     },
     {
-      name: 'bat',
-      email: 'bat@gmail.com',
+      name: '5',
+      email: '5@gmail.com',
       password,
     },
     {
-      name: 'mat',
-      email: 'mat@gmail.com',
+      name: '6',
+      email: '6@gmail.com',
       password,
     },
     {
-      name: 'lat',
-      email: 'lat@gmail.com',
+      name: '7',
+      email: '7@gmail.com',
       password,
     },
     {
-      name: 'kat',
-      email: 'kat@gmail.com',
+      name: '8',
+      email: '8@gmail.com',
       password,
     },
   ]);

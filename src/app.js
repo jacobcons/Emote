@@ -18,12 +18,16 @@ import { translateTextToEmojis } from './handlers/translateTextToEmojis.handlers
 import Joi from 'joi';
 import { validateQuery } from './middlewares/validation.middlewares.js';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
+import apiDocs from '../docs/apiDocs.json' assert { type: 'json' };
 
 const app = express();
 
 app.use(helmet());
 app.use(morgan('tiny'));
 app.use(express.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDocs));
 
 app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);

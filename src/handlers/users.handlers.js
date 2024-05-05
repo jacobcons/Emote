@@ -47,8 +47,7 @@ export async function getUser(req, res, next) {
     `
     SELECT 
       u.id, 
-      name, 
-      email, 
+      name,
       cover_image, 
       profile_image, 
       bio,

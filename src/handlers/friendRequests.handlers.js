@@ -4,6 +4,7 @@ import {
   checkForeignKeyConstraintViolation,
   createError,
   checkUniqueConstraintViolation,
+  checkCheckConstraintViolation,
 } from '../utils/errors.utils.js';
 import { calculateOffset, dbQuery } from '../utils/dbQueries.utils.js';
 import { FRIEND_REQUEST_TYPES } from '../constants.js';
@@ -55,7 +56,10 @@ export async function createFriendRequest(req, res) {
       trx,
     );
     if (areFriends) {
-      throw createError(409, `You are already friends with user<${userId}>`);
+      throw createError(
+        409,
+        `You are already friends with user with ID <${userId}>`,
+      );
     }
 
     const [{ exists: isFriendRequest }] = await dbQuery(
@@ -72,7 +76,7 @@ export async function createFriendRequest(req, res) {
     if (isFriendRequest) {
       throw createError(
         409,
-        `Friend request with user<${userId}> already exists`,
+        `Friend request with user with ID <${userId}> already exists`,
       );
     }
 
@@ -90,6 +94,10 @@ export async function createFriendRequest(req, res) {
       checkForeignKeyConstraintViolation(
         err,
         `User with ID <${userId}> not found`,
+      );
+      checkCheckConstraintViolation(
+        err,
+        `A logged-in user cannot make a friend request to themselves`,
       );
       throw err;
     }

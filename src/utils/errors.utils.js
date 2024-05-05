@@ -30,3 +30,13 @@ export function checkForeignKeyConstraintViolation(
     throw createError(404, message);
   }
 }
+
+export function checkCheckConstraintViolation(
+  err,
+  message = 'Check constraint violation',
+) {
+  const CHECK_CONSTRAINT_VIOLATION_ERROR_CODE = '23514';
+  if (err.code === CHECK_CONSTRAINT_VIOLATION_ERROR_CODE) {
+    throw createError(422, message);
+  }
+}

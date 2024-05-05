@@ -2,129 +2,95 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Emote",
-    "description": "An API for managing users, posts, comments, and reactions.",
+    "description": "",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": "Base Environment"
-    }
-  ],
   "paths": {
-    "/auth/register": {
+    "/auth/login": {
       "post": {
-        "summary": "Register",
-        "description": "Registers a new user with a name, email, and password and returns a JWT if registration is successful.",
+        "description": "",
+        "summary": "Login",
         "tags": [
           "Auth"
         ],
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "email", "password"],
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
                   "email": {
                     "type": "string",
                     "format": "email",
-                    "example": "1@gmail.com"
+                    "description": "Registered email address of the user"
                   },
                   "password": {
                     "type": "string",
-                    "example": "123",
-                    "minLength": 3
+                    "description": "Password for the user account"
                   }
-                }
+                },
+                "required": ["email", "password"]
+              },
+              "example": {
+                "email": "1@gmail.com",
+                "password": "123"
               }
             }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Registration successful, user created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzE0ODU3NjA5LCJleHAiOjE3NDY0MTUyMDl9.H55HQ4jyNIz25l95ORfmIIldZ_bEqq1H-ZN-rNswkKI"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "409": {
-            "description": "User with email is already registered"
           }
         },
         "security": []
       }
     },
-    "/auth/login": {
+    "/auth/register": {
       "post": {
-        "summary": "Login",
-        "description": "Authenticates a user based on provided email and password credentials. On successful validation and authentication, it returns a JWT for use in subsequent API requests.",
+        "description": "",
+        "summary": "Register",
         "tags": [
           "Auth"
         ],
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["email", "password"],
                 "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Full name of the user"
+                  },
                   "email": {
                     "type": "string",
-                    "example": "1@gmail.com"
+                    "format": "email",
+                    "description": "Email address of the user"
                   },
                   "password": {
                     "type": "string",
-                    "example": "123"
+                    "minLength": 3,
+                    "description": "Password for the account, must be at least 3 characters long"
                   }
-                }
+                },
+                "required": ["name", "email", "password"]
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "password": "securePass123"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful login",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzU2NDE3LCJleHAiOjE3NDYzMTQwMTd9.NqdhqwpdTrJtyKOa2waudgWlRBBd824upzwhuZG-t5Y"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "description": "Unauthorized - Incorrect login details"
           }
         },
         "security": []
@@ -132,13 +98,16 @@
     },
     "/users": {
       "get": {
-        "summary": "Search and paginate users",
-        "description": "Retrieves a list of users based on search criteria and pagination.",
+        "description": "",
+        "summary": "Get users",
+        "tags": [
+          "Users"
+        ],
         "parameters": [
           {
             "name": "q",
             "in": "query",
-            "description": "Search query to filter users by name.",
+            "description": "Search by name",
             "required": false,
             "schema": {
               "type": "string"
@@ -147,79 +116,30 @@
           {
             "name": "page",
             "in": "query",
-            "description": "Page number of the results to fetch.",
+            "description": "Page number for fetching results.",
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 1
+              "default": 1,
+              "minimum": 1
             }
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "Number of results per page.",
+            "description": "Number of items per page.",
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 10
+              "default": 10,
+              "minimum": 1
             }
           }
-        ],
+        ]
+      ,
         "responses": {
           "200": {
-            "description": "A list of users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "profileImage": {
-                        "type": "string",
-                        "format": "uri"
-                      },
-                      "friendshipStatus": {
-                        "type": "string",
-                        "enum": [
-                          "SELF",
-                          "FRIENDS",
-                          "REQUEST_RECEIVED",
-                          "REQUEST_SENT",
-                          "NO_REQUEST"
-                        ]
-                      }
-                    }
-                  },
-                  "example": [
-                    {
-                      "id": 1,
-                      "name": "John Doe",
-                      "profileImage": "https://example.com/images/profile/1.jpg",
-                      "friendshipStatus": "SELF"
-                    },
-                    {
-                      "id": 2,
-                      "name": "Jane Doe",
-                      "profileImage": null,
-                      "friendshipStatus": "FRIENDS"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
+            "description": "successful"
           }
         },
         "security": [
@@ -231,8 +151,11 @@
     },
     "/users/{id}": {
       "get": {
-        "summary": "Get a specific user",
-        "description": "Retrieves detailed information about a specific user.",
+        "description": "",
+        "summary": "Get user",
+        "tags": [
+          "Users"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -240,53 +163,12 @@
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "example": 1
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Detailed user information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "profileImage": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "friendshipStatus": {
-                      "type": "string",
-                      "enum": ["SELF", "FRIENDS", "REQUEST_RECEIVED", "REQUEST_SENT", "NO_REQUEST"]
-                    }
-                  },
-                  "example": {
-                    "id": 1,
-                    "name": "John Doe",
-                    "profileImage": "https://example.com/images/profile/1.jpg",
-                    "coverImage": "https://example.com/images/cover/1.jpg",
-                    "bio": "😀",
-                    "friendshipStatus": "FRIENDS"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
+            "description": "successful"
           }
         },
         "security": [
@@ -298,8 +180,17 @@
     },
     "/users/me": {
       "patch": {
-        "summary": "Update current user profile",
-        "description": "Updates profile information for the current user.",
+        "description": "",
+        "summary": "Update logged-in user",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -309,74 +200,37 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "minLength": 3
+                    "description": "User's name, must be at least 3 characters long.",
+                    "minLength": 3,
+                    "example": "John Doe"
                   },
                   "coverImage": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URI pointing to the user's cover image.",
+                    "example": "https://example.com/path/to/cover.jpg"
                   },
                   "profileImage": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URI pointing to the user's profile image.",
+                    "example": "https://example.com/path/to/profile.jpg"
                   },
                   "bio": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Biographical description which can only contain emojis.",
+                    "example": "😀🎉👍🚀"
                   }
-                },
-                "example": {
-                  "name": "Alice Johnson",
-                  "coverImage": "https://example.com/images/cover/1.jpg",
-                  "profileImage": "https://example.com/images/profile/1.jpg",
-                  "bio": "😀🎉🌟"
                 }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Profile updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "coverImage": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "profileImage": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "bio": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "id": 1,
-                    "name": "Alice Johnson",
-                    "coverImage": "https://example.com/images/cover/1.jpg",
-                    "profileImage": "https://example.com/images/profile/1.jpg",
-                    "bio": "😀🎉🌟"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
+        ]
       }
     },
     "/friendships/posts": {
@@ -389,29 +243,35 @@
         "parameters": [
           {
             "name": "page",
-            "description": "",
             "in": "query",
+            "description": "Page number for fetching results.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": ""
+              "default": 1,
+              "minimum": 1
             }
           },
           {
             "name": "limit",
-            "description": "",
             "in": "query",
+            "description": "Number of items per page.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": ""
+              "default": 10,
+              "minimum": 1
             }
           },
           {
             "name": "commentLimit",
-            "description": "",
             "in": "query",
+            "description": "Number of comments per post.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": ""
+              "default": 3,
+              "minimum": 1
             }
           }
         ],
@@ -445,29 +305,35 @@
           },
           {
             "name": "page",
-            "description": "",
             "in": "query",
+            "description": "Page number for fetching results.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": "1"
+              "default": 1,
+              "minimum": 1
             }
           },
           {
             "name": "limit",
-            "description": "",
             "in": "query",
+            "description": "Number of items per page.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": "2"
+              "default": 10,
+              "minimum": 1
             }
           },
           {
             "name": "commentLimit",
-            "description": "",
             "in": "query",
+            "description": "Number of comments per post.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": "1"
+              "default": 3,
+              "minimum": 1
             }
           }
         ],
@@ -505,14 +371,17 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "example": "👍 "
+                    "description": "Text of the post, which must consist solely of emojis.",
+                    "example": "😊🎉👍"
                   },
                   "image": {
                     "type": "string",
                     "format": "uri",
-                    "example": "https://youtube.com"
+                    "description": "Optional URI linking to an image associated with the post.",
+                    "example": "https://example.com/image.jpg"
                   }
-                }
+                },
+                "required": ["text"]
               }
             }
           }
@@ -553,10 +422,16 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text of the post, which must consist solely of emojis.",
+                    "example": "😊🎉👍"
+                  },
                   "image": {
                     "type": "string",
                     "format": "uri",
-                    "example": "https://imgur.com"
+                    "description": "Optional URI linking to an image associated with the post.",
+                    "example": "https://example.com/image.jpg"
                   }
                 }
               }
@@ -628,9 +503,19 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Type of reaction to a post",
+                    "enum": [
+                      "like",
+                      "love",
+                      "laugh",
+                      "shock",
+                      "sad",
+                      "angry"
+                    ],
                     "example": "like"
                   }
-                }
+                },
+                "required": ["type"]
               }
             }
           }
@@ -671,9 +556,19 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "example": "angry"
+                    "description": "Type of reaction to a post",
+                    "enum": [
+                      "like",
+                      "love",
+                      "laugh",
+                      "shock",
+                      "sad",
+                      "angry"
+                    ],
+                    "example": "like"
                   }
-                }
+                },
+                "required": ["type"]
               }
             }
           }
@@ -713,6 +608,55 @@
       }
     },
     "/posts/{id}/comments": {
+      "get": {
+        "description": "",
+        "summary": "Get comments",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for fetching results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
       "post": {
         "description": "",
         "summary": "Create comment",
@@ -743,56 +687,13 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "example": "👍👍👍"
+                    "description": "Text content that must consist solely of emojis.",
+                    "example": "🎉😊👍"
                   }
-                }
+                },
+                "required": ["text"]
               }
             }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "get": {
-        "description": "",
-        "summary": "Get comments",
-        "tags": [
-          "Comments"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "description": "",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "example": ""
-            }
-          },
-          {
-            "name": "limit",
-            "description": "",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "example": ""
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful"
           }
         },
         "security": [
@@ -833,9 +734,11 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "example": "😀"
+                    "description": "Text content that must consist solely of emojis.",
+                    "example": "🎉😊👍"
                   }
-                }
+                },
+                "required": ["text"]
               }
             }
           }
@@ -891,30 +794,34 @@
             }
           },
           {
-            "name": "page",
-            "description": "",
+            "name": "q",
             "in": "query",
+            "description": "Search by name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for fetching results.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": ""
+              "default": 1,
+              "minimum": 1
             }
           },
           {
             "name": "limit",
-            "description": "",
             "in": "query",
+            "description": "Number of items per page.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": ""
-            }
-          },
-          {
-            "name": "q",
-            "description": "",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": ""
+              "default": 10,
+              "minimum": 1
             }
           }
         ],
@@ -989,46 +896,55 @@
     "/friend-requests": {
       "get": {
         "description": "",
-        "summary": "Get friend requests",
+        "summary": "Get friend requests of logged-in user",
         "tags": [
           "Friend Requests"
         ],
         "parameters": [
           {
             "name": "q",
-            "description": "",
             "in": "query",
+            "description": "Search by name",
+            "required": false,
             "schema": {
-              "type": "string",
-              "example": "c"
-            }
-          },
-          {
-            "name": "type",
-            "description": "",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "incoming"
+              "type": "string"
             }
           },
           {
             "name": "page",
-            "description": "",
             "in": "query",
+            "description": "Page number for fetching results.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": "1"
+              "default": 1,
+              "minimum": 1
             }
           },
           {
             "name": "limit",
-            "description": "",
             "in": "query",
+            "description": "Number of items per page.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "example": "1"
+              "default": 10,
+              "minimum": 1
             }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of friend request",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "incoming",
+                "outgoing"
+              ]
+            },
+            "example": "incoming"
           }
         ],
         "responses": {
@@ -1103,7 +1019,9 @@
       "post": {
         "description": "",
         "summary": "Upload image",
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -1138,16 +1056,19 @@
       "get": {
         "description": "",
         "summary": "Translate text to emojis",
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "parameters": [
           {
             "name": "text",
             "description": "",
             "in": "query",
+            "required": true,
             "schema": {
-              "type": "string",
-              "example": "afsdfasd"
-            }
+              "type": "string"
+            },
+            "example": "I love this photo!"
           }
         ],
         "responses": {
@@ -1163,22 +1084,51 @@
       }
     }
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Base Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": ""
+    },
+    {
+      "name": "Users",
+      "description": ""
+    },
+    {
+      "name": "Posts",
+      "description": ""
+    },
+    {
+      "name": "Reactions",
+      "description": ""
+    },
+    {
+      "name": "Comments",
+      "description": ""
+    },
+    {
+      "name": "Friendships",
+      "description": ""
+    },
+    {
+      "name": "Friend Requests",
+      "description": ""
+    },
+    {
+      "name": "Misc",
+      "description": ""
+    }
+  ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer"
-      }
-    },
-    "responses": {
-      "400": {
-        "description": "Validation failed"
-      },
-      "401": {
-        "description": "No token provided/Invalid token"
-      },
-      "404": {
-        "description": "Resource not found"
       }
     }
   }

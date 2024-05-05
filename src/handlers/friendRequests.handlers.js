@@ -26,7 +26,7 @@ export async function getFriendRequests(req, res) {
     JOIN "user" AS u ON fr.receiver_id = u.id
     WHERE sender_id = :loggedInUserId`;
   }
-  sql += ` AND u.name LIKE :q
+  sql += ` AND u.name ILIKE :q
    LIMIT :limit OFFSET :offset`;
 
   const friendRequests = await dbQuery(sql, {

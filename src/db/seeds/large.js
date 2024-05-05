@@ -117,17 +117,23 @@ export async function seed(knex) {
 
   // generate reactions to insert
   const NUMBER_OF_REACTIONS = NUMBER_OF_POSTS * 5;
-  const reactions = new Set();
+  const reactions_no_type = new Set();
   for (let i = 1; i <= NUMBER_OF_REACTIONS; i++) {
     const userId = randomId(NUMBER_OF_USERS);
     const postId = randomId(NUMBER_OF_POSTS);
-    reactions.add(
+    reactions_no_type.add(
       JSON.stringify({
         userId,
         postId,
-        type: getRandomElement(REACTION_TYPES),
       }),
     );
+  }
+  const reactions = [];
+  for (let reaction of reactions_no_type) {
+    reactions.push({
+      ...JSON.parse(reaction),
+      type: getRandomElement(REACTION_TYPES),
+    });
   }
 
   // insert everything into db
@@ -138,7 +144,7 @@ export async function seed(knex) {
     batchInsert(knex, 'post', posts).then(() => {
       return Promise.all([
         batchInsert(knex, 'comment', comments),
-        batchInsert(knex, 'reaction', convertSetToArray(reactions)),
+        batchInsert(knex, 'reaction', reactions),
       ]);
     }),
   ]);

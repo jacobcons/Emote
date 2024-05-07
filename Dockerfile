@@ -10,6 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["npm", "run", "migrate"]
-
-CMD [ "node", "./src/server.js" ]
+CMD npm run migrate && node ./src/server.js

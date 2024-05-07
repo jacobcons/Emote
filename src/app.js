@@ -19,7 +19,7 @@ import Joi from 'joi';
 import { validateQuery } from './middlewares/validation.middlewares.js';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
-import apiDocs from '../docs/apiDocs.json' assert { type: 'json' };
+import apiDocs from '../docs/apiDocs.json' with { type: 'json' };
 
 const app = express();
 
@@ -30,12 +30,14 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDocs));
 
 app.use('/auth', authRouter);
-app.use('/users', verifyToken, usersRouter);
-app.use(verifyToken, postsRouter);
-app.use(verifyToken, reactionsRouter);
-app.use(verifyToken, commentsRouter);
-app.use(verifyToken, friendshipsRouter);
-app.use('/friend-requests', verifyToken, friendRequestsRouter);
+// protected routes
+app.use(verifyToken);
+app.use('/users', usersRouter);
+app.use(postsRouter);
+app.use(reactionsRouter);
+app.use(commentsRouter);
+app.use(friendshipsRouter);
+app.use('/friend-requests', friendRequestsRouter);
 app.post(
   '/upload-image',
   fileUpload({
@@ -49,7 +51,6 @@ app.post(
 );
 app.get(
   '/translate-text-to-emojis',
-  verifyToken,
   validateQuery(Joi.object({ text: Joi.string().required() })),
   translateTextToEmojis,
 );

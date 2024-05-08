@@ -16,7 +16,7 @@ This is just the backend API built with Node, Express.js and PostgreSQL
 
 ## Api docs
 
-[Api docs](https://emote-tgkoh.ondigitalocean.app/api-docs)
+[https://emote-tgkoh.ondigitalocean.app/api-docs](https://emote-tgkoh.ondigitalocean.app/api-docs)
 
 ## Todo
 

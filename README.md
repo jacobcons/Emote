@@ -4,19 +4,20 @@
 'I love this photo' you could express it as '📸❤️😍.' Additionally, if you're stuck on which emojis to choose, you can
 use the built-in AI translator to convert your plaintext to emojis.
 
-This is just the backend API built with Node, Express.js and PostgreSQL
+This is just the backend API built with Node, Express.js and PostgreSQL. 
 
 ## Features
 
+- Personal user profile
 - Feed of friends posts
 - React to posts using various emojis
 - Comment on posts
-- Friend request system
+- Full friend request system
 - Translate plaintext into pure emojis using chat-gpt with OpenAi API
 
 ## Api docs
 
-[https://emote-tgkoh.ondigitalocean.app/api-docs](https://emote-tgkoh.ondigitalocean.app/api-docs)
+<a href="https://emote-tgkoh.ondigitalocean.app/api-docs" target="_blank">https://emote-tgkoh.ondigitalocean.app/api-docs</a>
 
 ## Todo
 
@@ -51,7 +52,7 @@ This is just the backend API built with Node, Express.js and PostgreSQL
   - Misc
     - [x] POST /upload-image
     - [x] GET /translate-text-to-emojis?text=
-- [x] Make api docs using swagger
+- [x] Make swagger api docs
 - [x] Deploy to digital ocean using docker and setup CI/CD
 
 ## Wireframes

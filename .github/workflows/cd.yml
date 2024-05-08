@@ -23,7 +23,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: your-dockerhub-username/your-repo-name:latest
+          tags: doublethebass/emote:latest
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2

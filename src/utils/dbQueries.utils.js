@@ -1,11 +1,6 @@
 import { knex } from '../db/connection.js';
 import humps from 'humps';
 
-export function paginate(query, page = 1, limit = 10) {
-  const offset = (page - 1) * limit;
-  return query.offset(offset).limit(limit);
-}
-
 export function calculateOffset(page, limit) {
   return (page - 1) * limit;
 }

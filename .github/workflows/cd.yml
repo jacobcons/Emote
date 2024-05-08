@@ -3,7 +3,11 @@ name: CD
 on:
   push:
     branches: [main]
-
+    paths:
+      - 'src/**'
+      - 'docs/apiDocs.json'
+      - 'Dockerfile'
+      - 'knexfile.js'
 jobs:
   deploy:
     runs-on: ubuntu-latest

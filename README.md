@@ -22,7 +22,7 @@ This is just the backend API built with Node, Express.js and PostgreSQL.
 ## Todo
 
 - [x] Rough wireframes sketched on pen and paper
-- [x] ER diagram
+- [x] Plan database layout
 - [x] Plan endpoints
 - [x] Build the backend with express.js, implementing endpoints one by one using the plan
   - Auth
@@ -55,6 +55,10 @@ This is just the backend API built with Node, Express.js and PostgreSQL.
 - [x] Make swagger api docs
 - [x] Deploy to digital ocean using docker and setup CI/CD
 
+## Database layout
+
+![ER diagram](./docs/er-diagram.png)
+
 ## Wireframes
 
 <img src="./docs/1.jpg" width="450">
@@ -62,7 +66,3 @@ This is just the backend API built with Node, Express.js and PostgreSQL.
 <img src="./docs/3.jpg" width="450">
 <img src="./docs/4.jpg" width="450">
 <img src="./docs/5.jpg" width="450">
-
-## ER diagram
-
-![ER diagram](./docs/er-diagram.png)

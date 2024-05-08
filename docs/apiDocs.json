@@ -1086,8 +1086,12 @@
   },
   "servers": [
     {
+      "url": "https://emote-tgkoh.ondigitalocean.app",
+      "description": "Production"
+    },
+    {
       "url": "http://localhost:3000",
-      "description": "Base Environment"
+      "description": "Local"
     }
   ],
   "tags": [

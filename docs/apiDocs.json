@@ -1086,7 +1086,7 @@
   },
   "servers": [
     {
-      "url": "https://emote-tgkoh.ondigitalocean.app",
+      "url": "https://emote.jacobcons.com",
       "description": "Production"
     },
     {

@@ -6,6 +6,9 @@ use the built-in AI translator to convert your plaintext to emojis.
 
 This is just the backend API built with Node, Express.js and PostgreSQL. 
 
+If you're interested you can read a writeup I did about some of the key technical decisions I had to make whilst building
+this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-making-emote/).
+
 ## Features
 
 - Personal user profile

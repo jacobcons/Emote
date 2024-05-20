@@ -1,11 +1,12 @@
 import express from 'express';
-import { login, register } from '../handlers/auth.handlers.js';
+import { login, register, requestRegister } from '../handlers/auth.handlers.js';
 import { validateBody } from '../middlewares/validation.middlewares.js';
 import Joi from 'joi';
+import { verifyToken } from '../middlewares/auth.middlewares.js';
 
 export const router = express.Router();
 router.post(
-  '/register',
+  '/request-register',
   validateBody(
     Joi.object({
       name: Joi.string().required(),
@@ -13,8 +14,11 @@ router.post(
       password: Joi.string().min(3).required(),
     }),
   ),
-  register,
+  requestRegister,
 );
+
+router.post('/register', verifyToken('register'), register);
+
 router.post(
   '/login',
   validateBody(

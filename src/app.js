@@ -31,7 +31,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDocs));
 
 app.use('/auth', authRouter);
 // protected routes
-app.use(verifyToken);
+app.use(verifyToken('user'));
 app.use('/users', usersRouter);
 app.use(postsRouter);
 app.use(reactionsRouter);

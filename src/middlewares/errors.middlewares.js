@@ -1,5 +1,4 @@
 import { createError } from '../utils/errors.utils.js';
-import { isCelebrateError } from 'celebrate';
 
 export function errorHandler(err, req, res, next) {
   console.error(err);
@@ -10,5 +9,5 @@ export function errorHandler(err, req, res, next) {
 }
 
 export function notFound(req, res, next) {
-  next(createError(404, `Cannot ${req.method} ${req.originalUrl}`));
+  return next(createError(404, `Cannot ${req.method} ${req.originalUrl}`));
 }

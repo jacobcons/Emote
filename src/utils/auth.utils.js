@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-export async function hashPassword(password) {
-  return await bcrypt.hash(password, 10);
+export function hashPassword(password) {
+  return bcrypt.hash(password, 10);
 }
-export function createToken(id) {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+export function createToken(payload) {
+  return jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
 }

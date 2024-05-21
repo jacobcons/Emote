@@ -17,6 +17,7 @@ this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-
 - Comment on posts
 - Full friend request system
 - Translate plaintext into pure emojis using chat-gpt with OpenAi API
+- Account confirmation and password reset emails
 
 ## Api docs
 

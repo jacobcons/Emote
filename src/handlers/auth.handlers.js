@@ -6,7 +6,6 @@ import {
 import { createToken, hashPassword } from '../utils/auth.utils.js';
 import { dbQuery } from '../utils/dbQueries.utils.js';
 import { sendEmail } from '../utils/email.utils.js';
-import jwt from 'jsonwebtoken';
 
 export async function requestRegister(req, res, next) {
   const { name, email, password } = req.body;
@@ -32,8 +31,8 @@ export async function requestRegister(req, res, next) {
     email,
     'Emote account registration confirmation',
     `
-    Send POST request below with the given Authorization header:
-    - POST ${domain}/auth/register
+    Send POST request to given url with given header:
+    - ${domain}/auth/register
     - Authorization: Bearer ${token}
     
     This will be changed to link to a page that automatically calls the above request when frontend is implemented`,
@@ -87,5 +86,56 @@ export async function login(req, res, next) {
     return next(incorrectLoginError);
   }
 
+  res.json({ token: createToken({ id: user.id, type: 'user' }) });
+}
+
+export async function requestResetPassword(req, res, next) {
+  const { email } = req.body;
+  const [{ exists: userAlreadyRegistered }] = await dbQuery(
+    `
+    SELECT EXISTS(
+      SELECT 1
+      FROM "user"
+      WHERE email = :email
+    )
+    `,
+    { email },
+  );
+  if (!userAlreadyRegistered) {
+    return next(createError(409, `User with email ${email} is not registered`));
+  }
+
+  const domain = `${req.protocol}://${req.headers.host}`;
+  const token = createToken({ email, type: 'resetPassword' });
+  sendEmail(
+    email,
+    'Emote password reset',
+    `
+    Send PATCH request to given url, with given body and header:
+    - ${domain}/auth/reset-password
+    - { password: <new-password> }
+    - Authorization: Bearer ${token}
+    
+    This will be changed to link to a page that automatically calls the above request when frontend is implemented`,
+  );
+
+  res.status(201).json({
+    message: `An email has been sent to ${email}. Please click the link to reset your password.`,
+  });
+}
+
+export async function resetPassword(req, res, next) {
+  const { email } = req.user;
+  const { password } = req.body;
+
+  const [user] = await dbQuery(
+    `
+    UPDATE "user"
+    SET password = :password
+    WHERE email = :email
+    RETURNING id
+    `,
+    { email, password: await hashPassword(password) },
+  );
   res.json({ token: createToken({ id: user.id, type: 'user' }) });
 }

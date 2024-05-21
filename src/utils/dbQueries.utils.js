@@ -21,3 +21,17 @@ export async function dbQueryExplain(sql, bindings) {
     },
   );
 }
+
+export async function getIsUserRegistered(email) {
+  const [{ exists }] = await dbQuery(
+    `
+    SELECT EXISTS(
+      SELECT 1
+      FROM "user"
+      WHERE email = :email
+    )
+    `,
+    { email },
+  );
+  return exists;
+}

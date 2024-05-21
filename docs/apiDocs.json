@@ -48,10 +48,10 @@
         "security": []
       }
     },
-    "/auth/register": {
+    "/auth/request-register": {
       "post": {
-        "description": "",
-        "summary": "Register",
+        "description": "Sends email with account registration link",
+        "summary": "Request Register",
         "tags": [
           "Auth"
         ],
@@ -94,6 +94,102 @@
           }
         },
         "security": []
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "Creates account using jwt sent via email from /auth/request-register",
+        "summary": "Register",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "security": [
+          {
+            "registerToken": []
+          }
+        ]
+      }
+    },
+    "/auth/request-reset-password": {
+      "post": {
+        "description": "Sends email with password reset link",
+        "summary": "Request Reset Password",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              },
+              "example": {
+                "email": "jack@gmail.com"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/reset-password": {
+      "patch": {
+        "description": "Resets password using jwt sent via email from /auth/request-reset-password",
+        "summary": "Reset Password",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                }
+              },
+              "example": {
+                "password": "securePass123"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "resetPasswordToken": []
+          }
+        ]
       }
     },
     "/users": {
@@ -144,7 +240,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -173,7 +269,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -228,7 +324,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -282,7 +378,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -344,7 +440,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -388,7 +484,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -440,7 +536,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -467,7 +563,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -522,7 +618,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -575,7 +671,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -602,7 +698,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -653,7 +749,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -698,7 +794,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -745,7 +841,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -772,7 +868,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -832,7 +928,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -861,7 +957,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -888,7 +984,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -954,7 +1050,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -983,7 +1079,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       },
@@ -1010,7 +1106,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -1047,7 +1143,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -1078,7 +1174,7 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "userToken": []
           }
         ]
       }
@@ -1130,9 +1226,20 @@
   ],
   "components": {
     "securitySchemes": {
-      "bearerAuth": {
+      "userToken": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "registerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "resetPasswordToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

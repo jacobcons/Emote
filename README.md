@@ -4,7 +4,7 @@
 'I love this photo' you could express it as '📸❤️😍.' Additionally, if you're stuck on which emojis to choose, you can
 use the built-in AI translator to convert your plaintext to emojis.
 
-This is just the backend API built with Node, Express.js and PostgreSQL. 
+This is just the backend API built with Node.js, Express.js and PostgreSQL. 
 
 If you're interested you can read a writeup I did about some of the key technical decisions I had to make whilst building
 this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-making-emote/).
@@ -16,7 +16,7 @@ this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-
 - React to posts using various emojis
 - Comment on posts
 - Full friend request system
-- Translate plaintext into pure emojis using chat-gpt with OpenAi API
+- Translate plaintext into pure emojis using chat-gpt with OpenAi's API
 - Account confirmation and password reset emails
 
 ## Api docs

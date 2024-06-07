@@ -20,9 +20,11 @@ import { validateQuery } from './middlewares/validation.middlewares.js';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import apiDocs from '../docs/apiDocs.json' with { type: 'json' };
+import cors from 'cors';
 
 const app = express();
 
+app.use(cors());
 app.use(helmet());
 app.use(morgan('tiny'));
 app.use(express.json());

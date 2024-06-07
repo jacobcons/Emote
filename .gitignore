@@ -1,7 +1,5 @@
 node_modules/
-env*.bat
 .env*
-docker-compose.yml
 
 .vscode/
 .idea/

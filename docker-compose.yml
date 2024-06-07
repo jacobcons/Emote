@@ -1,0 +1,13 @@
+services:
+  app:
+    image: doublethebass/emote
+    ports:
+      - '3000:3000'
+    environment:
+      DB_URL: ${DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_LIFETIME: ${JWT_LIFETIME}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}

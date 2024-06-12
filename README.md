@@ -2,9 +2,7 @@
 
 "😊Emote😞" is a social network site with a twist: you can only post/comment using exclusively emojis. So instead of saying
 'I love this photo' you could express it as '📸❤️😍.' Additionally, if you're stuck on which emojis to choose, you can
-use the built-in AI translator to convert your plaintext to emojis.
-
-This is just the backend API built with Node.js, Express.js and PostgreSQL. 
+use the built-in AI translator to convert your plaintext to emojis. (please note this is just the backend api)
 
 If you're interested you can read a writeup I did about some of the key technical decisions I had to make whilst building
 this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-making-emote/).

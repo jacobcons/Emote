@@ -26,7 +26,7 @@ this project on my [blog](https://jacobcons.com/blog/technical-decisions-whilst-
 - [x] Rough wireframes sketched on pen and paper
 - [x] Plan database layout
 - [x] Plan endpoints
-- [x] Build the backend with express.js, implementing endpoints one by one using the plan
+- [x] Build the backend, implementing endpoints one by one using the plan
   - Auth
     - [x] POST /auth/login
     - [x] POST /auth/register

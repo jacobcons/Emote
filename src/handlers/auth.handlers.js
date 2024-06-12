@@ -45,7 +45,10 @@ export async function register(req, res, next) {
     );
     res
       .status(201)
-      .json({ userToken: createToken({ id: user.id, type: 'user' }) });
+      .json({
+        id: user.id,
+        userToken: createToken({ id: user.id, type: 'user' }),
+      });
   } catch (err) {
     checkUniqueConstraintViolation(
       err,
@@ -77,7 +80,10 @@ export async function login(req, res, next) {
     return next(incorrectLoginError);
   }
 
-  res.json({ userToken: createToken({ id: user.id, type: 'user' }) });
+  res.json({
+    id: user.id,
+    userToken: createToken({ id: user.id, type: 'user' }),
+  });
 }
 
 export async function requestResetPassword(req, res, next) {

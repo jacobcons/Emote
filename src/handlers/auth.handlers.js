@@ -43,12 +43,10 @@ export async function register(req, res, next) {
       `,
       { name, email, password: await hashPassword(password) },
     );
-    res
-      .status(201)
-      .json({
-        id: user.id,
-        userToken: createToken({ id: user.id, type: 'user' }),
-      });
+    res.status(201).json({
+      userId: user.id,
+      userToken: createToken({ id: user.id, type: 'user' }),
+    });
   } catch (err) {
     checkUniqueConstraintViolation(
       err,
@@ -81,7 +79,7 @@ export async function login(req, res, next) {
   }
 
   res.json({
-    id: user.id,
+    userId: user.id,
     userToken: createToken({ id: user.id, type: 'user' }),
   });
 }
@@ -125,5 +123,8 @@ export async function resetPassword(req, res, next) {
     { email, password: await hashPassword(password) },
   );
 
-  res.json({ userToken: createToken({ id: user.id, type: 'user' }) });
+  res.json({
+    userId: user.id,
+    userToken: createToken({ id: user.id, type: 'user' }),
+  });
 }

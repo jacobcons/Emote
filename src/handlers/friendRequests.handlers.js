@@ -13,7 +13,7 @@ export async function getFriendRequests(req, res) {
   const loggedInUserId = req.user.id;
   const { q = '', type, page = 1, limit = 10 } = req.query;
   let sql = `
-  SELECT fr.id, u.id, u.name, u.profile_image
+  SELECT fr.id, u.id as "userId", u.name, u.profile_image
   FROM friend_request AS fr
   `;
 

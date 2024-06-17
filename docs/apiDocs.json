@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Emote",
-    "description": "",
+    "description": "Get up and running:\n1. Either use the default details under the login route to get logged in or create your own account by calling the request register route\n2. If you choose the latter, you will be sent an account confirmation email => simply copy the jwt => click authorize in the swagger docs => paste jwt into registerToken input => make request to the register endpoint => copy the returned jwt => click authorize in the swagger docs => paste jwt into userToken input\n3. You should now be authorized to interact with any of the routes",
     "version": "1.0.0"
   },
   "paths": {

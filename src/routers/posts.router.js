@@ -37,7 +37,10 @@ router.get(
 router.post(
   '/posts',
   validateBody(
-    Joi.object({ text: emojiSchema.required(), image: Joi.string().uri() }),
+    Joi.object({
+      text: emojiSchema.required(),
+      image: Joi.string().uri(),
+    }),
   ),
   createPost,
 );
@@ -45,7 +48,9 @@ router
   .route('/posts/:id')
   .all(validateIds('id'))
   .patch(
-    validateBody(Joi.object({ text: emojiSchema, image: Joi.string().uri() })),
+    validateBody(
+      Joi.object({ text: emojiSchema, image: Joi.string().uri().allow(null) }),
+    ),
     updatePost,
   )
   .delete(deletePost);

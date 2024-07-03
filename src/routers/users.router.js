@@ -27,9 +27,9 @@ router.patch(
   validateBody(
     Joi.object({
       name: Joi.string().min(3),
-      coverImage: Joi.string().uri(),
-      profileImage: Joi.string().uri(),
-      bio: emojiSchema,
+      coverImage: Joi.string().uri().allow(null),
+      profileImage: Joi.string().uri().allow(null),
+      bio: emojiSchema.allow(null),
     }),
   ),
   updateCurrentUser,

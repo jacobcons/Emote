@@ -1,4 +1,5 @@
 import { app } from './app.js';
+import { dbQuery } from './utils/dbQueries.utils.js';
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
@@ -6,8 +7,5 @@ app.listen(port, () => {
 });
 
 // ping supabase on server startup and every 6 days to prevent shutdown
-await sql`SELECT 1`.execute(db);
-setInterval(
-  async () => await sql`SELECT 1`.execute(db),
-  1000 * 60 * 60 * 24 * 6,
-);
+await dbQuery('SELECT 1');
+setInterval(async () => await dbQuery('SELECT 1'), 1000 * 60 * 60 * 24 * 6);

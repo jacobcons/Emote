@@ -6,6 +6,6 @@ app.listen(port, () => {
   console.log(`app listening on port ${port}`);
 });
 
-// ping supabase on server startup and every 6 days to prevent shutdown
+// ping supabase on server startup and every 3 days to prevent shutdown
 await dbQuery('SELECT 1');
-setInterval(async () => await dbQuery('SELECT 1'), 1000 * 60 * 60 * 24 * 6);
+setInterval(async () => await dbQuery('SELECT 1'), 1000 * 60 * 60 * 24 * 3);
